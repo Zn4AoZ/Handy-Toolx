@@ -27,7 +27,6 @@ No sign-up, no uploads, no tracking. Just open and use.
 - **[PDF.js](https://mozilla.github.io/pdf.js)** – Apache-2.0 – PDF rendering by Mozilla
 - **[Marked](https://marked.js.org)** – MIT – Markdown parsing
 - **[QRCode.js](https://github.com/davidshimjs/qrcodejs)** – MIT – QR code generation
-- **[PonyTail CSS](https://github.com/edgetype/ponytail)** – MIT – Lightweight CSS framework
 - **[Pako](https://github.com/nodeca/pako)** – MIT – zlib port
 
 Built with using open-source software.
