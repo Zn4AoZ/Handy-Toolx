@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Color — Handy Toolx</title>
+    <style>
+        :root{--bg:#F0EAE0;--ink:#1a1a1a;--ink2:#4f4b44;--ink3:#6f6a5f;--rust:#B5392A;--rust-soft:rgba(181,57,42,.08);--paper:#FBF8F2;--mono:'IBM Plex Mono','SF Mono',monospace;--sans:'Archivo',system-ui,sans-serif;--grid:repeating-linear-gradient(0deg,transparent,transparent 47px,rgba(26,26,26,.06)47px,rgba(26,26,26,.06)48px),repeating-linear-gradient(90deg,transparent,transparent 47px,rgba(26,26,26,.06)47px,rgba(26,26,26,.06)48px);--sidebar:200px}
+        @font-face{font-family:Archivo;src:url(../assets/fonts/archivo-variable.woff2)format('woff2');font-weight:400 900;font-display:swap}
+        @font-face{font-family:'IBM Plex Mono';src:url(../assets/fonts/ibm-plex-mono-variable.woff2)format('woff2');font-weight:400 700;font-display:swap}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{background:var(--bg);background-image:var(--grid);font-family:var(--sans);color:var(--ink);padding:1.5rem;min-height:100vh}
+        a{color:var(--rust)}
+        .app{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:var(--sidebar) 1fr;gap:2rem;background:var(--paper);border:2px solid var(--ink);padding:1.5rem;min-height:80vh}
+        .sidebar{border-right:2px solid var(--ink);padding-right:1.5rem;display:flex;flex-direction:column}
+        .sidebar-header{display:flex;flex-direction:column;gap:.2rem;padding-bottom:1rem;border-bottom:2px solid var(--ink);margin-bottom:1rem}
+        .sidebar-brand{font-family:var(--mono);font-weight:600;font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;color:var(--rust)}
+        .sidebar-title{font-weight:800;font-size:1.2rem;letter-spacing:-.025em}
+        .sidebar-back{font-family:var(--mono);font-size:.55rem;text-transform:uppercase;letter-spacing:.18em;color:var(--ink3);margin-top:.2rem}
+        .sidebar-back:hover{color:var(--rust);text-decoration:none}
+        .sidebar-nav{display:flex;flex-direction:column;gap:.1rem;flex:1}
+        .sidebar-nav .tool-btn{font-family:var(--mono);font-size:.65rem;text-align:left;padding:.4rem .7rem;border:none;border-left:3px solid transparent;background:transparent;color:var(--ink2);cursor:pointer;transition:background .15s,border-color .15s;letter-spacing:.02em}
+        .sidebar-nav .tool-btn:hover{background:var(--bg);color:var(--ink)}
+        .sidebar-nav .tool-btn.active{border-left-color:var(--rust);background:var(--rust-soft);color:var(--ink);font-weight:600}
+        .main{display:flex;flex-direction:column;min-width:0}
+        .main-header{padding-bottom:.75rem;border-bottom:2px solid var(--ink);margin-bottom:1.25rem}
+        .main-header h2{font-weight:800;font-size:1.4rem;letter-spacing:-.025em}
+        .main-header .desc{font-family:var(--mono);font-size:.65rem;color:var(--ink3);margin-top:.1rem;letter-spacing:.05em}
+        .tool-panel{display:none;animation:fadeIn .25s cubic-bezier(.16,1,.3,1)}
+        .tool-panel.active{display:block}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+        .tool-panel label{font-family:var(--mono);font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;display:block;margin-top:.9rem;margin-bottom:.2rem;color:var(--ink2)}
+        .tool-panel label:first-of-type{margin-top:0}
+        .tool-panel input[type=text],.tool-panel input[type=color],.tool-panel input[type=number],.tool-panel select{width:100%;background:var(--paper);border:2px solid var(--ink);padding:.4rem .6rem;font-family:var(--mono);font-size:.7rem;color:var(--ink)}
+        .tool-panel input[type=color]{height:44px;padding:.1rem;cursor:pointer}
+        .row2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+        .action{margin-top:1.2rem;font-family:var(--mono);font-weight:600;font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;padding:.45rem 1.2rem;border:2px solid var(--ink);background:var(--rust);color:#fff;cursor:pointer;transition:background .2s}
+        .action:hover{background:var(--ink);color:#fff}
+        .action.secondary{background:var(--paper);color:var(--ink);margin-left:.5rem}
+        .action.secondary:hover{background:var(--bg)}
+        .action.copied{background:#2b6e3b!important;border-color:#2b6e3b!important;color:#fff!important;animation:copyPulse .3s ease}
+        @keyframes copyPulse{0%{transform:scale(1)}40%{transform:scale(1.06)}100%{transform:scale(1)}}
+        .status{font-size:.65rem;font-family:var(--mono);color:var(--ink2);margin-top:.6rem;min-height:1.2rem}
+        .status.err{color:#b5392a}
+        .status.ok{color:#2b6e3b}
+        .swatches{display:flex;gap:.6rem;margin-top:1rem;flex-wrap:wrap}
+        .swatch{width:80px}
+        .swatch .chip{height:60px;border:2px solid var(--ink)}
+        .swatch .code{font-family:var(--mono);font-size:.55rem;color:var(--ink3);text-align:center;margin-top:.2rem}
+        .conv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-top:.75rem}
+        .conv-grid div{background:var(--bg);border:2px solid var(--ink);padding:.4rem .6rem}
+        .conv-grid .l{font-size:.55rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em}
+        .conv-grid .v{font-family:var(--mono);font-size:.7rem;margin-top:.1rem}
+        .contrast-preview{margin-top:1rem;padding:1.5rem;border:2px solid var(--ink);text-align:center}
+        .contrast-preview .big{font-size:1.4rem;font-weight:700}
+        .grad-preview{height:120px;border:2px solid var(--ink);margin-top:1rem}
+        @media(max-width:768px){.app{grid-template-columns:1fr;padding:1rem;gap:1rem}.sidebar{border-right:none;border-bottom:2px solid var(--ink);padding-right:0;padding-bottom:.75rem}.sidebar-nav{flex-direction:row;flex-wrap:wrap;gap:.1rem}.sidebar-nav .tool-btn{border-left:none;border-bottom:3px solid transparent;padding:.3rem .5rem;font-size:.6rem}.sidebar-nav .tool-btn.active{border-left:none;border-bottom-color:var(--rust)}body{padding:.75rem}.row2{grid-template-columns:1fr}}
+    </style>
+</head>
+<body>
+<div class="app">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <span class="sidebar-brand">Zn4AoZ</span>
+            <span class="sidebar-title">Color Tools</span>
+            <a class="sidebar-back" href="../index.html">← menu</a>
+        </div>
+        <nav class="sidebar-nav" id="sidebar">
+            <button class="tool-btn active" data-tool="palette">Palette generator</button>
+            <button class="tool-btn" data-tool="convert">Format converter</button>
+            <button class="tool-btn" data-tool="contrast">Contrast checker</button>
+            <button class="tool-btn" data-tool="gradient">Gradient generator</button>
+        </nav>
+    </aside>
+
+    <main class="main">
+        <div class="tool-panel active" id="panel-palette">
+            <div class="main-header"><h2>Palette generator</h2><div class="desc">Pick a base color to generate complementary, analogous, triadic, and shade variants.</div></div>
+            <label>Base color</label>
+            <input type="color" id="palBase" value="#f5a623">
+            <button class="action" onclick="genPalette()">Generate</button>
+            <div id="palOut"></div>
+        </div>
+
+        <div class="tool-panel" id="panel-convert">
+            <div class="main-header"><h2>Format converter</h2><div class="desc">Live conversion between HEX, RGB, and HSL.</div></div>
+            <label>Color</label>
+            <input type="color" id="convPicker" value="#5eead4" oninput="syncFromPicker()">
+            <label>HEX</label>
+            <input type="text" id="convHex" placeholder="#5eead4" oninput="syncFromHex()">
+            <div class="conv-grid">
+                <div><div class="l">HEX</div><div class="v" id="outHex">—</div></div>
+                <div><div class="l">RGB</div><div class="v" id="outRgb">—</div></div>
+                <div><div class="l">HSL</div><div class="v" id="outHsl">—</div></div>
+            </div>
+        </div>
+
+        <div class="tool-panel" id="panel-contrast">
+            <div class="main-header"><h2>Contrast checker</h2><div class="desc">WCAG contrast ratio between text and background colors.</div></div>
+            <div class="row2">
+                <div><label>Text color</label><input type="color" id="ctText" value="#e8eaed" oninput="checkContrast()"></div>
+                <div><label>Background color</label><input type="color" id="ctBg" value="#14171c" oninput="checkContrast()"></div>
+            </div>
+            <div class="contrast-preview" id="ctPreview">
+                <div class="big" id="ctBigText">Sample text</div>
+                <div style="margin-top:.3rem;">The quick brown fox jumps over the lazy dog.</div>
+            </div>
+            <div class="status" id="ctStatus"></div>
+        </div>
+
+        <div class="tool-panel" id="panel-gradient">
+            <div class="main-header"><h2>Gradient generator</h2><div class="desc">Two-stop linear gradient with adjustable angle.</div></div>
+            <div class="row2">
+                <div><label>Start color</label><input type="color" id="gradA" value="#f5a623" oninput="updateGradient()"></div>
+                <div><label>End color</label><input type="color" id="gradB" value="#f472b6" oninput="updateGradient()"></div>
+            </div>
+            <label>Angle (deg)</label>
+            <input type="number" id="gradAngle" value="90" min="0" max="360" oninput="updateGradient()">
+            <div class="grad-preview" id="gradPreview"></div>
+            <label>CSS</label>
+            <input type="text" id="gradCss" readonly style="font-family:var(--mono);">
+        </div>
+    </main>
+</div>
+
+<script>
+document.getElementById("sidebar").addEventListener("click", e => {
+  const btn = e.target.closest(".tool-btn");
+  if (!btn) return;
+  document.querySelectorAll(".tool-btn").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll(".tool-panel").forEach(p => p.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById("panel-" + btn.dataset.tool).classList.add("active");
+});
+
+function hexToRgb(hex){
+  hex = hex.replace("#","");
+  if (hex.length === 3) hex = hex.split("").map(c => c+c).join("");
+  const num = parseInt(hex, 16);
+  return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
+}
+function rgbToHex(r,g,b){ return "#" + [r,g,b].map(v => Math.round(v).toString(16).padStart(2,"0")).join(""); }
+function rgbToHsl(r,g,b){
+  r/=255; g/=255; b/=255;
+  const max = Math.max(r,g,b), min = Math.min(r,g,b);
+  let h, s, l = (max+min)/2;
+  if (max === min){ h = s = 0; }
+  else{
+    const d = max-min;
+    s = l > 0.5 ? d/(2-max-min) : d/(max+min);
+    switch(max){
+      case r: h = (g-b)/d + (g<b?6:0); break;
+      case g: h = (b-r)/d + 2; break;
+      case b: h = (r-g)/d + 4; break;
+    }
+    h /= 6;
+  }
+  return { h: Math.round(h*360), s: Math.round(s*100), l: Math.round(l*100) };
+}
+function hslToRgb(h,s,l){
+  h/=360; s/=100; l/=100;
+  let r,g,b;
+  if (s === 0){ r=g=b=l; }
+  else{
+    const hue2rgb = (p,q,t) => {
+      if (t<0) t+=1; if (t>1) t-=1;
+      if (t<1/6) return p+(q-p)*6*t;
+      if (t<1/2) return q;
+      if (t<2/3) return p+(q-p)*(2/3-t)*6;
+      return p;
+    };
+    const q = l < 0.5 ? l*(1+s) : l+s-l*s;
+    const p = 2*l-q;
+    r = hue2rgb(p,q,h+1/3); g = hue2rgb(p,q,h); b = hue2rgb(p,q,h-1/3);
+  }
+  return { r: r*255, g: g*255, b: b*255 };
+}
+
+function flashCopied(btn, label){
+  if (!btn) return;
+  clearTimeout(btn._copyTimer);
+  if (!btn.dataset.label) btn.dataset.label = btn.textContent;
+  btn.textContent = label || "Copied!";
+  btn.classList.add("copied");
+  btn._copyTimer = setTimeout(() => {
+    btn.textContent = btn.dataset.label;
+    btn.classList.remove("copied");
+  }, 1300);
+}
+function copyText(text, btn){
+  navigator.clipboard?.writeText(text).then(() => flashCopied(btn)).catch(() => {
+    const input = document.createElement("input");
+    input.value = text;
+    document.body.appendChild(input);
+    input.select();
+    if (document.execCommand("copy")) flashCopied(btn);
+    input.remove();
+  });
+}
+
+function genPalette(){
+  const base = document.getElementById("palBase").value;
+  const {r,g,b} = hexToRgb(base);
+  const hsl = rgbToHsl(r,g,b);
+  const mk = (h,s,l,label) => {
+    const c = hslToRgb((h+360)%360, Math.max(0,Math.min(100,s)), Math.max(0,Math.min(100,l)));
+    return { hex: rgbToHex(c.r,c.g,c.b), label };
+  };
+  const groups = [
+    { title: "Complementary", swatches: [mk(hsl.h,hsl.s,hsl.l,"Base"), mk(hsl.h+180,hsl.s,hsl.l,"Complement")] },
+    { title: "Analogous", swatches: [mk(hsl.h-30,hsl.s,hsl.l,"-30°"), mk(hsl.h,hsl.s,hsl.l,"Base"), mk(hsl.h+30,hsl.s,hsl.l,"+30°")] },
+    { title: "Triadic", swatches: [mk(hsl.h,hsl.s,hsl.l,"Base"), mk(hsl.h+120,hsl.s,hsl.l,"+120°"), mk(hsl.h+240,hsl.s,hsl.l,"+240°")] },
+    { title: "Shades", swatches: [mk(hsl.h,hsl.s,20,"20%"), mk(hsl.h,hsl.s,35,"35%"), mk(hsl.h,hsl.s,50,"50%"), mk(hsl.h,hsl.s,65,"65%"), mk(hsl.h,hsl.s,80,"80%")] },
+  ];
+  const out = document.getElementById("palOut");
+  out.innerHTML = groups.map(gr => `
+    <label>${gr.title}</label>
+    <div class="swatches">
+      ${gr.swatches.map(s => `
+        <div class="swatch">
+          <div class="chip" style="background:${s.hex}"></div>
+          <div class="code">${s.hex}</div>
+          <button class="action secondary" style="margin-top:4px;font-size:.5rem;padding:.2rem .4rem;width:100%;" onclick="copyText('${s.hex}', this)">Copy</button>
+        </div>
+      `).join("")}
+    </div>
+  `).join("");
+}
+
+function syncFromPicker(){
+  const hex = document.getElementById("convPicker").value;
+  document.getElementById("convHex").value = hex;
+  renderConv(hex);
+}
+function syncFromHex(){
+  let hex = document.getElementById("convHex").value.trim();
+  if (!/^#?[0-9a-fA-F]{3}$|^#?[0-9a-fA-F]{6}$/.test(hex)) return;
+  if (!hex.startsWith("#")) hex = "#" + hex;
+  document.getElementById("convPicker").value = hex.length === 4 ? "#" + [...hex.slice(1)].map(c=>c+c).join("") : hex;
+  renderConv(hex);
+}
+function renderConv(hex){
+  const {r,g,b} = hexToRgb(hex);
+  const hsl = rgbToHsl(r,g,b);
+  document.getElementById("outHex").textContent = hex.toUpperCase();
+  document.getElementById("outRgb").textContent = `rgb(${r}, ${g}, ${b})`;
+  document.getElementById("outHsl").textContent = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+}
+renderConv("#5eead4");
+document.getElementById("convHex").value = "#5eead4";
+
+function relLuminance(r,g,b){
+  const a = [r,g,b].map(v => {
+    v /= 255;
+    return v <= 0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4);
+  });
+  return 0.2126*a[0] + 0.7152*a[1] + 0.0722*a[2];
+}
+function checkContrast(){
+  const tHex = document.getElementById("ctText").value;
+  const bHex = document.getElementById("ctBg").value;
+  const t = hexToRgb(tHex), bg = hexToRgb(bHex);
+  const l1 = relLuminance(t.r,t.g,t.b), l2 = relLuminance(bg.r,bg.g,bg.b);
+  const ratio = (Math.max(l1,l2)+0.05) / (Math.min(l1,l2)+0.05);
+  document.getElementById("ctPreview").style.background = bHex;
+  document.getElementById("ctPreview").style.color = tHex;
+  const aa = ratio >= 4.5, aaa = ratio >= 7, aaLarge = ratio >= 3;
+  const el = document.getElementById("ctStatus");
+  el.textContent = `Ratio ${ratio.toFixed(2)}:1 — AA ${aa?"pass":"fail"} · AA Large ${aaLarge?"pass":"fail"} · AAA ${aaa?"pass":"fail"}`;
+  el.className = "status " + (aa ? "ok" : "err");
+}
+checkContrast();
+
+function updateGradient(){
+  const a = document.getElementById("gradA").value;
+  const b = document.getElementById("gradB").value;
+  const angle = document.getElementById("gradAngle").value;
+  const css = `linear-gradient(${angle}deg, ${a}, ${b})`;
+  document.getElementById("gradPreview").style.background = css;
+  document.getElementById("gradCss").value = "background: " + css + ";";
+}
+updateGradient();
+</script>
+</body>
+</html>
