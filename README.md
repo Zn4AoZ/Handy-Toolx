@@ -1,2 +1,4 @@
 # Handy-toolsx
-A repository created to store useful daily life tools with a frontend as html and backend stored locally
+A repository consiting of a daily use tool. built to process completely on local machine.
+
+To use it, you shall open index.html
