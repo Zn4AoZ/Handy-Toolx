@@ -17,3 +17,5 @@ A set of small helper programs that run in your browser — no internet needed, 
 3. Pick a tool and go
 
 No sign-up, no uploads, no tracking. Just open and use.
+
+You are welcomed to use this repository as a template and create even better and useful tools
