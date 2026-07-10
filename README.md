@@ -19,3 +19,15 @@ A set of small helper programs that run in your browser — no internet needed, 
 No sign-up, no uploads, no tracking. Just open and use.
 
 **You are welcomed to use this repository as a template and create even better and useful tools.**
+
+## Credits
+
+- **[JSZip](https://stuartk.com/jszip)** – MIT/GPLv3 – Zip file handling
+- **[pdf-lib](https://pdf-lib.js.org)** – MIT – PDF generation
+- **[PDF.js](https://mozilla.github.io/pdf.js)** – Apache-2.0 – PDF rendering by Mozilla
+- **[Marked](https://marked.js.org)** – MIT – Markdown parsing
+- **[QRCode.js](https://github.com/davidshimjs/qrcodejs)** – MIT – QR code generation
+- **[PonyTail CSS](https://github.com/edgetype/ponytail)** – MIT – Lightweight CSS framework
+- **[Pako](https://github.com/nodeca/pako)** – MIT – zlib port
+
+Built with using open-source software.
