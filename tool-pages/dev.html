@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Dev — Handy Toolx</title>
+    <script src="../assets/js/theme.js"></script>
     <style>
         :root{--bg:#F0EAE0;--ink:#1a1a1a;--ink2:#4f4b44;--ink3:#6f6a5f;--rust:#B5392A;--rust-soft:rgba(181,57,42,.08);--paper:#FBF8F2;--mono:'IBM Plex Mono','SF Mono',monospace;--sans:'Archivo',system-ui,sans-serif;--grid:repeating-linear-gradient(0deg,transparent,transparent 47px,rgba(26,26,26,.06)47px,rgba(26,26,26,.06)48px),repeating-linear-gradient(90deg,transparent,transparent 47px,rgba(26,26,26,.06)47px,rgba(26,26,26,.06)48px);--sidebar:200px}
         @font-face{font-family:Archivo;src:url(../assets/fonts/archivo-variable.woff2)format('woff2');font-weight:400 900;font-display:swap}
@@ -50,13 +51,22 @@
         #qrBox{margin-top:1rem;background:#fff;padding:.75rem;border:2px solid var(--ink);display:inline-block}
         .match-hl{background:rgba(74,222,128,.25);color:#2b6e3b;border-radius:1px}
         @media(max-width:768px){.app{grid-template-columns:1fr;padding:1rem;gap:1rem}.sidebar{border-right:none;border-bottom:2px solid var(--ink);padding-right:0;padding-bottom:.75rem}.sidebar-nav{flex-direction:row;flex-wrap:wrap;gap:.1rem}.sidebar-nav .tool-btn{border-left:none;border-bottom:3px solid transparent;padding:.3rem .5rem;font-size:.55rem}.sidebar-nav .tool-btn.active{border-left:none;border-bottom-color:var(--rust)}body{padding:.75rem}.row2,.row3{grid-template-columns:1fr}}
+        .sidebar-header-row{display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem}
+        body{transition:background-color .2s,color .2s}
     </style>
+    <link rel="stylesheet" href="../assets/css/theme.css">
 </head>
 <body>
 <div class="app">
     <aside class="sidebar">
         <div class="sidebar-header">
-            <span class="sidebar-brand">Zn4AoZ</span>
+            <div class="sidebar-header-row">
+                <span class="sidebar-brand">Zn4AoZ</span>
+                <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false" title="Switch to dark mode" aria-label="Toggle dark mode">
+                    <svg class="icon icon-moon" viewBox="0 0 16 16" fill="currentColor"><path d="M14 8.6A6.4 6.4 0 0 1 6.9 2 6.6 6.6 0 1 0 14 8.6z"/></svg>
+                    <svg class="icon icon-sun" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="3.3"/><path d="M8 0v2M8 14v2M16 8h-2M2 8H0M13.66 2.34l-1.42 1.42M3.76 12.24l-1.42 1.42M13.66 13.66l-1.42-1.42M3.76 3.76 2.34 2.34" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                </button>
+            </div>
             <span class="sidebar-title">Dev Tools</span>
             <a class="sidebar-back" href="../index.html">← menu</a>
         </div>
@@ -65,7 +75,8 @@
             <button class="tool-btn" data-tool="hash">Hash generator</button>
             <button class="tool-btn" data-tool="base64">Base64 encode/decode</button>
             <button class="tool-btn" data-tool="regex">Regex tester</button>
-            <button class="tool-btn" data-tool="qr">QR code</button>
+            <button class="tool-btn" data-tool="qr">QR code generator</button>
+            <button class="tool-btn" data-tool="qrscan">QR code scanner</button>
             <button class="tool-btn" data-tool="password">Password generator</button>
             <button class="tool-btn" data-tool="jwt">JWT decoder</button>
         </nav>
@@ -114,13 +125,27 @@
         </div>
 
         <div class="tool-panel" id="panel-qr">
-            <div class="main-header"><h2>QR code</h2><div class="desc">Generate a QR code from any text or URL.</div></div>
+            <div class="main-header"><h2>QR code generator</h2><div class="desc">Generate a QR code from any text or URL.</div></div>
             <label>Content</label>
             <input type="text" id="qrText" placeholder="https://example.com">
             <button class="action" onclick="genQr()">Generate</button>
             <button class="action secondary" onclick="downloadQr()">Download PNG</button>
             <button class="action secondary" onclick="copyQrImage(this)">Copy QR</button>
-            <div id="qrBox"></div>
+            <div id="qrBox" class="qr-canvas-wrap"></div>
+        </div>
+
+        <div class="tool-panel" id="panel-qrscan">
+            <div class="main-header"><h2>QR code scanner</h2><div class="desc">Upload or drop an image containing a QR code to decode its contents — entirely in your browser.</div></div>
+            <label>QR image</label>
+            <input type="file" id="qrScanFile" accept="image/*">
+            <div class="qr-scan-drop" id="qrScanDrop">Drop an image here, or use the picker above</div>
+            <img class="qr-scan-preview" id="qrScanPreview">
+            <div class="status" id="qrScanStatus"></div>
+            <div class="qr-result-box" id="qrScanResult"></div>
+            <div class="output-actions" id="qrScanActions" style="display:none;">
+                <button class="action secondary" onclick="copyQrScanResult(this)">Copy text</button>
+                <button class="action secondary" id="qrScanOpenLink" style="display:none;" onclick="openQrScanLink()">Open link</button>
+            </div>
         </div>
 
         <div class="tool-panel" id="panel-password">
@@ -154,6 +179,8 @@
 </div>
 
 <script src="../assets/js/qrcode.min.js"></script>
+<script src="../assets/js/jsQR.js"></script>
+<script src="../assets/js/common.js"></script>
 <script>
 document.getElementById("sidebar").addEventListener("click", e => {
   const btn = e.target.closest(".tool-btn");
@@ -162,36 +189,18 @@ document.getElementById("sidebar").addEventListener("click", e => {
   document.querySelectorAll(".tool-panel").forEach(p => p.classList.remove("active"));
   btn.classList.add("active");
   document.getElementById("panel-" + btn.dataset.tool).classList.add("active");
+  try { sessionStorage.setItem("handytoolx-dev-tab", btn.dataset.tool); } catch (e) {}
 });
-function setStatus(id, msg, type){
-  const el = document.getElementById(id);
-  el.textContent = msg; el.className = "status" + (type ? " " + type : "");
-}
-function flashCopied(btn, label){
-  if (!btn) return;
-  clearTimeout(btn._copyTimer);
-  if (!btn.dataset.label) btn.dataset.label = btn.textContent;
-  btn.textContent = label || "Copied!";
-  btn.classList.add("copied");
-  btn._copyTimer = setTimeout(() => {
-    btn.textContent = btn.dataset.label;
-    btn.classList.remove("copied");
-  }, 1300);
-}
-function copyEl(id, btn){
-  const el = document.getElementById(id);
-  const text = el.value !== undefined ? el.value : el.textContent;
-  if (!text) return;
-  if (navigator.clipboard?.writeText){
-    navigator.clipboard.writeText(text).then(() => flashCopied(btn)).catch(() => legacyCopy(el, btn));
-  } else {
-    legacyCopy(el, btn);
-  }
-}
-function legacyCopy(el, btn){
-  el.select ? el.select() : window.getSelection().selectAllChildren(el);
-  if (document.execCommand("copy")) flashCopied(btn);
-}
+(function restoreTab(){
+  let last; try { last = sessionStorage.getItem("handytoolx-dev-tab"); } catch (e) {}
+  if (!last) return;
+  const btn = document.querySelector('.tool-btn[data-tool="' + last + '"]');
+  if (btn) btn.click();
+})();
+const setStatus = HandyToolx.setStatus;
+const flashCopied = HandyToolx.flashCopied;
+const copyEl = HandyToolx.copyEl;
+const legacyCopy = HandyToolx.legacyCopy;
 
 function genUuid(){
   const n = parseInt(document.getElementById("uuidCount").value, 10) || 1;
@@ -284,6 +293,71 @@ function copyQrImage(btn){
       input.remove();
     }
   });
+}
+
+// --- QR scanner ---
+let qrScanText = "";
+function decodeQrFromFile(file){
+  if (!file) return;
+  setStatus("qrScanStatus", "Decoding…", "");
+  document.getElementById("qrScanActions").style.display = "none";
+  const resultBox = document.getElementById("qrScanResult");
+  resultBox.style.display = "none";
+  const img = new Image();
+  img.onload = () => {
+    document.getElementById("qrScanPreview").src = img.src;
+    document.getElementById("qrScanPreview").style.display = "block";
+    const canvas = document.createElement("canvas");
+    canvas.width = img.width; canvas.height = img.height;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const code = jsQR(imageData.data, imageData.width, imageData.height);
+    if (code && code.data){
+      qrScanText = code.data;
+      resultBox.textContent = code.data;
+      resultBox.style.display = "block";
+      document.getElementById("qrScanActions").style.display = "flex";
+      const linkBtn = document.getElementById("qrScanOpenLink");
+      if (/^https?:\/\//i.test(code.data)){
+        linkBtn.style.display = "inline-block";
+      } else {
+        linkBtn.style.display = "none";
+      }
+      setStatus("qrScanStatus", "QR code decoded.", "ok");
+    } else {
+      setStatus("qrScanStatus", "No QR code found in that image.", "err");
+    }
+  };
+  img.onerror = () => setStatus("qrScanStatus", "Couldn't load that image.", "err");
+  img.src = URL.createObjectURL(file);
+}
+document.getElementById("qrScanFile").addEventListener("change", e => decodeQrFromFile(e.target.files[0]));
+(function initQrDrop(){
+  const drop = document.getElementById("qrScanDrop");
+  ["dragenter","dragover"].forEach(evt => drop.addEventListener(evt, e => {
+    e.preventDefault(); drop.classList.add("drag");
+  }));
+  ["dragleave","drop"].forEach(evt => drop.addEventListener(evt, e => {
+    e.preventDefault(); drop.classList.remove("drag");
+  }));
+  drop.addEventListener("drop", e => {
+    const file = e.dataTransfer.files && e.dataTransfer.files[0];
+    if (file) decodeQrFromFile(file);
+  });
+  drop.addEventListener("click", () => document.getElementById("qrScanFile").click());
+  document.addEventListener("paste", e => {
+    if (!document.getElementById("panel-qrscan").classList.contains("active")) return;
+    const item = [...(e.clipboardData?.items || [])].find(i => i.type.startsWith("image/"));
+    if (item) decodeQrFromFile(item.getAsFile());
+  });
+})();
+function copyQrScanResult(btn){
+  if (!qrScanText) return setStatus("qrScanStatus", "Nothing to copy yet.", "err");
+  HandyToolx.copyText(qrScanText, btn);
+}
+function openQrScanLink(){
+  if (qrScanText) window.open(qrScanText, "_blank", "noopener");
 }
 
 function genPassword(){
