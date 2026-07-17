@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Text &amp; Data — Handy Toolx</title>
+    <title>PDF — Handy Toolx</title>
+    <script src="../assets/js/theme.js"></script>
     <style>
         :root{--bg:#F0EAE0;--ink:#1a1a1a;--ink2:#4f4b44;--ink3:#6f6a5f;--rust:#B5392A;--rust-soft:rgba(181,57,42,.08);--paper:#FBF8F2;--mono:'IBM Plex Mono','SF Mono',monospace;--sans:'Archivo',system-ui,sans-serif;--grid:repeating-linear-gradient(0deg,transparent,transparent 47px,rgba(26,26,26,.06)47px,rgba(26,26,26,.06)48px),repeating-linear-gradient(90deg,transparent,transparent 47px,rgba(26,26,26,.06)47px,rgba(26,26,26,.06)48px);--sidebar:200px}
         @font-face{font-family:Archivo;src:url(../assets/fonts/archivo-variable.woff2)format('woff2');font-weight:400 900;font-display:swap}
@@ -19,7 +20,7 @@
         .sidebar-back{font-family:var(--mono);font-size:.55rem;text-transform:uppercase;letter-spacing:.18em;color:var(--ink3);margin-top:.2rem}
         .sidebar-back:hover{color:var(--rust);text-decoration:none}
         .sidebar-nav{display:flex;flex-direction:column;gap:.1rem;flex:1}
-        .sidebar-nav .tool-btn{font-family:var(--mono);font-size:.6rem;text-align:left;padding:.4rem .7rem;border:none;border-left:3px solid transparent;background:transparent;color:var(--ink2);cursor:pointer;transition:background .15s,border-color .15s;letter-spacing:.02em;line-height:1.3}
+        .sidebar-nav .tool-btn{font-family:var(--mono);font-size:.65rem;text-align:left;padding:.4rem .7rem;border:none;border-left:3px solid transparent;background:transparent;color:var(--ink2);cursor:pointer;transition:background .15s,border-color .15s;letter-spacing:.02em}
         .sidebar-nav .tool-btn:hover{background:var(--bg);color:var(--ink)}
         .sidebar-nav .tool-btn.active{border-left-color:var(--rust);background:var(--rust-soft);color:var(--ink);font-weight:600}
         .main{display:flex;flex-direction:column;min-width:0}
@@ -31,152 +32,126 @@
         @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
         .tool-panel label{font-family:var(--mono);font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;display:block;margin-top:.9rem;margin-bottom:.2rem;color:var(--ink2)}
         .tool-panel label:first-of-type{margin-top:0}
-        .tool-panel input[type=text],.tool-panel input[type=number],.tool-panel select,.tool-panel textarea{width:100%;background:var(--paper);border:2px solid var(--ink);padding:.4rem .6rem;font-family:var(--mono);font-size:.7rem;color:var(--ink)}
-        .tool-panel textarea{font-family:var(--mono);font-size:.65rem;resize:vertical}
-        .tool-panel textarea.tall{height:220px}
-        .row2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-        .row3{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem}
-        .action{margin-top:1.2rem;font-family:var(--mono);font-weight:600;font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;padding:.45rem 1.2rem;border:2px solid var(--ink);background:var(--rust);color:#fff;cursor:pointer;transition:background .2s}
-        .action:hover{background:var(--ink);color:#fff}
-        .action.secondary{background:var(--paper);color:var(--ink);margin-left:.5rem}
-        .action.secondary:hover{background:var(--bg)}
-        .action.copied{background:#2b6e3b!important;border-color:#2b6e3b!important;color:#fff!important;animation:copyPulse .3s ease}
-        @keyframes copyPulse{0%{transform:scale(1)}40%{transform:scale(1.06)}100%{transform:scale(1)}}
+        .tool-panel input[type=file],.tool-panel input[type=text],.tool-panel input[type=number],.tool-panel select{width:100%;background:var(--paper);border:2px solid var(--ink);padding:.4rem .6rem;font-family:var(--mono);font-size:.7rem;color:var(--ink)}
+        .tool-panel input[type=file]{padding:.4rem;cursor:pointer}
+        .tool-panel input[type=file]::file-selector-button{font-family:var(--mono);font-size:.6rem;padding:.25rem .75rem;border:2px solid var(--ink);background:var(--bg);color:var(--ink);cursor:pointer;margin-right:.75rem;transition:background .15s}
+        .tool-panel input[type=file]::file-selector-button:hover{background:var(--ink);color:var(--paper)}
+        .tool-panel .action{margin-top:1.2rem;font-family:var(--mono);font-weight:600;font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;padding:.45rem 1.2rem;border:2px solid var(--ink);background:var(--rust);color:#fff;cursor:pointer;transition:background .2s}
+        .tool-panel .action:hover{background:var(--ink);color:#fff}
         .status{font-size:.65rem;font-family:var(--mono);color:var(--ink2);margin-top:.6rem;min-height:1.2rem}
         .status.err{color:#b5392a}
         .status.ok{color:#2b6e3b}
-        .stats{display:flex;gap:1.5rem;margin-top:1rem;flex-wrap:wrap}
-        .stats .stat{background:var(--bg);border:2px solid var(--ink);padding:.6rem 1rem;min-width:80px}
-        .stats .stat .n{font-family:var(--mono);font-size:1.2rem;color:var(--rust)}
-        .stats .stat .l{font-size:.55rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em}
-        .preview-box{background:#fff;color:#111;border:2px solid var(--ink);padding:1.2rem;margin-top:.8rem;max-height:400px;overflow:auto}
-        .diff-line{font-family:var(--mono);font-size:.65rem;padding:.1rem .4rem;white-space:pre-wrap}
-        .diff-add{background:rgba(74,222,128,.15);color:#2b6e3b}
-        .diff-del{background:rgba(248,113,113,.15);color:#b5392a}
-        .diff-same{color:var(--ink2)}
-        @media(max-width:768px){.app{grid-template-columns:1fr;padding:1rem;gap:1rem}.sidebar{border-right:none;border-bottom:2px solid var(--ink);padding-right:0;padding-bottom:.75rem}.sidebar-nav{flex-direction:row;flex-wrap:wrap;gap:.1rem}.sidebar-nav .tool-btn{border-left:none;border-bottom:3px solid transparent;padding:.3rem .5rem;font-size:.55rem}.sidebar-nav .tool-btn.active{border-left:none;border-bottom-color:var(--rust)}body{padding:.75rem}.row2,.row3{grid-template-columns:1fr}}
+        pre.out{background:var(--bg);border:2px solid var(--ink);padding:.6rem .9rem;font-family:var(--mono);font-size:.65rem;white-space:pre-wrap;word-break:break-all;max-height:280px;overflow:auto;margin-top:.6rem}
+        @media(max-width:768px){.app{grid-template-columns:1fr;padding:1rem;gap:1rem}.sidebar{border-right:none;border-bottom:2px solid var(--ink);padding-right:0;padding-bottom:.75rem}.sidebar-nav{flex-direction:row;flex-wrap:wrap;gap:.1rem}.sidebar-nav .tool-btn{border-left:none;border-bottom:3px solid transparent;padding:.3rem .5rem;font-size:.6rem}.sidebar-nav .tool-btn.active{border-left:none;border-bottom-color:var(--rust)}body{padding:.75rem}}
+        .sidebar-header-row{display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem}
+        body{transition:background-color .2s,color .2s}
     </style>
+    <link rel="stylesheet" href="../assets/css/theme.css">
 </head>
 <body>
 <div class="app">
     <aside class="sidebar">
         <div class="sidebar-header">
-            <span class="sidebar-brand">Zn4AoZ</span>
-            <span class="sidebar-title">Text &amp; Data</span>
+            <div class="sidebar-header-row">
+                <span class="sidebar-brand">Zn4AoZ</span>
+                <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false" title="Switch to dark mode" aria-label="Toggle dark mode">
+                    <svg class="icon icon-moon" viewBox="0 0 16 16" fill="currentColor"><path d="M14 8.6A6.4 6.4 0 0 1 6.9 2 6.6 6.6 0 1 0 14 8.6z"/></svg>
+                    <svg class="icon icon-sun" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="3.3"/><path d="M8 0v2M8 14v2M16 8h-2M2 8H0M13.66 2.34l-1.42 1.42M3.76 12.24l-1.42 1.42M13.66 13.66l-1.42-1.42M3.76 3.76 2.34 2.34" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                </button>
+            </div>
+            <span class="sidebar-title">PDF Tools</span>
             <a class="sidebar-back" href="../index.html">← menu</a>
         </div>
         <nav class="sidebar-nav" id="sidebar">
-            <button class="tool-btn active" data-tool="json">JSON formatter</button>
-            <button class="tool-btn" data-tool="csv">CSV &harr; JSON</button>
-            <button class="tool-btn" data-tool="md">Markdown preview</button>
-            <button class="tool-btn" data-tool="diff">Diff checker</button>
-            <button class="tool-btn" data-tool="count">Word / char count</button>
-            <button class="tool-btn" data-tool="case">Case converter</button>
-            <button class="tool-btn" data-tool="lorem">Lorem ipsum</button>
+            <button class="tool-btn active" data-tool="merge">Merge</button>
+            <button class="tool-btn" data-tool="split">Split</button>
+            <button class="tool-btn" data-tool="delete">Delete pages</button>
+            <button class="tool-btn" data-tool="extract">Extract pages</button>
+            <button class="tool-btn" data-tool="rotate">Rotate</button>
+            <button class="tool-btn" data-tool="info">Info</button>
+            <button class="tool-btn" data-tool="text">Extract text</button>
         </nav>
     </aside>
 
     <main class="main">
-        <!-- JSON -->
-        <div class="tool-panel active" id="panel-json">
-            <div class="main-header"><h2>JSON formatter</h2><div class="desc">Format, validate, and pretty-print JSON.</div></div>
-            <label>Input</label>
-            <textarea id="jsonIn" class="tall" placeholder='{"key":"value"}'></textarea>
-            <button class="action" onclick="doJsonFormat()">Format</button>
-            <button class="action secondary" onclick="doJsonMinify()">Minify</button>
-            <div class="status" id="jsonStatus"></div>
-            <label>Output</label>
-            <textarea id="jsonOut" class="tall" readonly></textarea>
+        <div class="tool-panel active" id="panel-merge">
+            <div class="main-header"><h2>Merge</h2><div class="desc">Pick PDFs one at a time or several at once — click "Choose Files" again to add more. Merged in the order they were added.</div></div>
+            <label>PDF files</label>
+            <input type="file" id="mergeFiles" accept=".pdf" multiple>
+            <button class="action" onclick="doMerge()">Merge</button>
+            <div class="status" id="mergeStatus"></div>
+            <div id="mergeResult" style="display:none;"></div>
         </div>
 
-        <!-- CSV -->
-        <div class="tool-panel" id="panel-csv">
-            <div class="main-header"><h2>CSV &harr; JSON</h2><div class="desc">Converts either direction — paste CSV or JSON array of objects.</div></div>
-            <label>Input</label>
-            <textarea id="csvIn" class="tall" placeholder="name,age&#10;Alice,30&#10;Bob,25"></textarea>
-            <button class="action" onclick="csvToJson()">CSV &rarr; JSON</button>
-            <button class="action secondary" onclick="jsonToCsv()">JSON &rarr; CSV</button>
-            <div class="status" id="csvStatus"></div>
-            <label>Output</label>
-            <textarea id="csvOut" class="tall" readonly></textarea>
+        <div class="tool-panel" id="panel-split">
+            <div class="main-header"><h2>Split</h2><div class="desc">Splits every page into its own PDF, delivered as a ZIP.</div></div>
+            <label>PDF file</label>
+            <input type="file" id="splitFile" accept=".pdf">
+            <button class="action" onclick="doSplit()">Split &amp; download ZIP</button>
+            <div class="status" id="splitStatus"></div>
+            <div id="splitResult" style="display:none;"></div>
         </div>
 
-        <!-- Markdown -->
-        <div class="tool-panel" id="panel-md">
-            <div class="main-header"><h2>Markdown preview</h2><div class="desc">Live-rendered Markdown.</div></div>
-            <div class="row2">
-                <div><label>Markdown</label><textarea id="mdIn" class="tall" oninput="renderMd()" placeholder="# Heading&#10;&#10;Some **bold** text.">## Hello
-
-This is **bold**, this is *italic*.
-
-- item one
-- item two
-
-`inline code`</textarea></div>
-                <div><label>Preview</label><div class="preview-box" id="mdOut"></div></div>
-            </div>
+        <div class="tool-panel" id="panel-delete">
+            <div class="main-header"><h2>Delete pages</h2><div class="desc">Remove specific pages by number.</div></div>
+            <label>PDF file</label>
+            <input type="file" id="deleteFile" accept=".pdf">
+            <label>Pages to delete</label>
+            <input type="text" id="deletePages" placeholder="e.g. 1,3,5">
+            <button class="action" onclick="doDelete()">Delete pages</button>
+            <div class="status" id="deleteStatus"></div>
+            <div id="deleteResult" style="display:none;"></div>
         </div>
 
-        <!-- Diff -->
-        <div class="tool-panel" id="panel-diff">
-            <div class="main-header"><h2>Diff checker</h2><div class="desc">Line-by-line comparison of two texts.</div></div>
-            <div class="row2">
-                <div><label>Original</label><textarea id="diffA" class="tall"></textarea></div>
-                <div><label>Changed</label><textarea id="diffB" class="tall"></textarea></div>
-            </div>
-            <button class="action" onclick="doDiff()">Compare</button>
-            <div class="status" id="diffStatus"></div>
-            <div id="diffOut" style="margin-top:.75rem;"></div>
+        <div class="tool-panel" id="panel-extract">
+            <div class="main-header"><h2>Extract pages</h2><div class="desc">Pull specific pages into a new PDF.</div></div>
+            <label>PDF file</label>
+            <input type="file" id="extractFile" accept=".pdf">
+            <label>Pages to extract</label>
+            <input type="text" id="extractPages" placeholder="e.g. 1,3,5">
+            <button class="action" onclick="doExtract()">Extract pages</button>
+            <div class="status" id="extractStatus"></div>
+            <div id="extractResult" style="display:none;"></div>
         </div>
 
-        <!-- Count -->
-        <div class="tool-panel" id="panel-count">
-            <div class="main-header"><h2>Word / character count</h2><div class="desc">Live stats as you type.</div></div>
-            <textarea id="countIn" class="tall" oninput="doCount()" placeholder="Paste or type text here..."></textarea>
-            <div class="stats">
-                <div class="stat"><div class="n" id="cWords">0</div><div class="l">Words</div></div>
-                <div class="stat"><div class="n" id="cChars">0</div><div class="l">Characters</div></div>
-                <div class="stat"><div class="n" id="cCharsNoSpace">0</div><div class="l">No spaces</div></div>
-                <div class="stat"><div class="n" id="cSentences">0</div><div class="l">Sentences</div></div>
-                <div class="stat"><div class="n" id="cReading">0</div><div class="l">Min read</div></div>
-            </div>
+        <div class="tool-panel" id="panel-rotate">
+            <div class="main-header"><h2>Rotate</h2><div class="desc">Rotate all pages, or a specific set.</div></div>
+            <label>PDF file</label>
+            <input type="file" id="rotateFile" accept=".pdf">
+            <label>Pages (blank = all)</label>
+            <input type="text" id="rotatePages" placeholder="e.g. 1,2">
+            <label>Angle</label>
+            <select id="rotateAngle"><option value="90">90°</option><option value="180">180°</option><option value="270">270°</option></select>
+            <button class="action" onclick="doRotate()">Rotate</button>
+            <div class="status" id="rotateStatus"></div>
+            <div id="rotateResult" style="display:none;"></div>
         </div>
 
-        <!-- Case -->
-        <div class="tool-panel" id="panel-case">
-            <div class="main-header"><h2>Case converter</h2><div class="desc">Convert text between common cases.</div></div>
-            <label>Input</label>
-            <textarea id="caseIn" class="tall"></textarea>
-            <div class="row3">
-                <button class="action" onclick="convertCase('upper')">UPPERCASE</button>
-                <button class="action" onclick="convertCase('lower')">lowercase</button>
-                <button class="action" onclick="convertCase('title')">Title Case</button>
-                <button class="action" onclick="convertCase('sentence')">Sentence case</button>
-                <button class="action" onclick="convertCase('camel')">camelCase</button>
-                <button class="action" onclick="convertCase('snake')">snake_case</button>
-                <button class="action" onclick="convertCase('kebab')">kebab-case</button>
-            </div>
-            <label>Output</label>
-            <textarea id="caseOut" class="tall" readonly></textarea>
+        <div class="tool-panel" id="panel-info">
+            <div class="main-header"><h2>Info</h2><div class="desc">Page count, encryption status, and metadata.</div></div>
+            <label>PDF file</label>
+            <input type="file" id="infoFile" accept=".pdf">
+            <button class="action" onclick="doInfo()">Get info</button>
+            <pre class="out" id="infoOut" style="display:none;"></pre>
+            <div class="status" id="infoStatus"></div>
         </div>
 
-        <!-- Lorem -->
-        <div class="tool-panel" id="panel-lorem">
-            <div class="main-header"><h2>Lorem ipsum generator</h2><div class="desc">Placeholder text, generated locally.</div></div>
-            <div class="row2">
-                <div><label>Paragraphs</label><input type="number" id="loremParas" value="3" min="1" max="20"></div>
-                <div><label>Starts with "Lorem ipsum..."</label>
-                    <select id="loremClassic"><option value="yes">Yes</option><option value="no">No</option></select>
-                </div>
-            </div>
-            <button class="action" onclick="genLorem()">Generate</button>
-            <button class="action secondary" onclick="copyLorem(this)">Copy</button>
-            <textarea id="loremOut" class="tall" readonly style="margin-top:.75rem;"></textarea>
+        <div class="tool-panel" id="panel-text">
+            <div class="main-header"><h2>Extract text</h2><div class="desc">Pull all readable text out of a PDF into a .txt file.</div></div>
+            <label>PDF file</label>
+            <input type="file" id="textFile" accept=".pdf">
+            <button class="action" onclick="doText()">Extract &amp; download .txt</button>
+            <div class="status" id="textStatus"></div>
+            <div id="textResult" style="display:none;"></div>
         </div>
     </main>
 </div>
 
-<script src="../assets/js/marked.min.js"></script>
+<script src="../assets/js/pdf-lib.min.js"></script>
+<script src="../assets/js/pdf.min.js"></script>
+<script src="../assets/js/jszip.min.js"></script>
+<script src="../assets/js/common.js"></script>
+<script src="../assets/js/filepicker.js"></script>
 <script>
 document.getElementById("sidebar").addEventListener("click", e => {
   const btn = e.target.closest(".tool-btn");
@@ -185,180 +160,216 @@ document.getElementById("sidebar").addEventListener("click", e => {
   document.querySelectorAll(".tool-panel").forEach(p => p.classList.remove("active"));
   btn.classList.add("active");
   document.getElementById("panel-" + btn.dataset.tool).classList.add("active");
-  if (btn.dataset.tool === "md") renderMd();
+  try { sessionStorage.setItem("handytoolx-pdf-tab", btn.dataset.tool); } catch (e) {}
+});
+(function restoreTab(){
+  let last; try { last = sessionStorage.getItem("handytoolx-pdf-tab"); } catch (e) {}
+  if (!last) return;
+  const btn = document.querySelector('.tool-btn[data-tool="' + last + '"]');
+  if (btn) btn.click();
+})();
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = "../assets/js/pdf.worker.min.js";
+const { PDFDocument, degrees } = PDFLib;
+
+const setStatus = HandyToolx.setStatus;
+const downloadBlob = HandyToolx.downloadBlob;
+function download(bytes, filename, mime){
+  downloadBlob(new Blob([bytes], {type: mime || "application/pdf"}), filename);
+}
+function parsePages(str){
+  return str.split(",").map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n));
+}
+
+const mergePicker = HandyToolxFilePicker.attach(document.getElementById("mergeFiles"));
+["splitFile","deleteFile","extractFile","rotateFile","infoFile","textFile"].forEach(id => {
+  HandyToolxFilePicker.attach(document.getElementById(id));
 });
 
-function setStatus(id, msg, type){
-  const el = document.getElementById(id);
-  el.textContent = msg; el.className = "status" + (type ? " " + type : "");
-}
+// Reconstructs readable text from pdf.js text items using their actual
+// position on the page, instead of naively joining every fragment with
+// a single space (which loses line breaks and glues words together).
+function reconstructPageText(items){
+  const lines = [];
+  let currentLine = [];
+  let lastY = null, lastRight = null;
 
-function doJsonFormat(){
-  try{
-    const parsed = JSON.parse(document.getElementById("jsonIn").value);
-    document.getElementById("jsonOut").value = JSON.stringify(parsed, null, 2);
-    setStatus("jsonStatus", "Valid JSON.", "ok");
-  }catch(e){ setStatus("jsonStatus", "Invalid JSON: " + e.message, "err"); }
-}
-function doJsonMinify(){
-  try{
-    const parsed = JSON.parse(document.getElementById("jsonIn").value);
-    document.getElementById("jsonOut").value = JSON.stringify(parsed);
-    setStatus("jsonStatus", "Valid JSON.", "ok");
-  }catch(e){ setStatus("jsonStatus", "Invalid JSON: " + e.message, "err"); }
-}
+  for (const item of items){
+    if (!item.str){
+      if (item.hasEOL && currentLine.length){ lines.push(currentLine.join("")); currentLine = []; lastY = null; lastRight = null; }
+      continue;
+    }
+    const y = item.transform[5];
+    const x = item.transform[4];
+    const height = item.height || Math.abs(item.transform[3]) || 10;
+    const sameLine = lastY !== null && Math.abs(y - lastY) < height * 0.4;
 
-function parseCsv(str){
-  const rows = [];
-  let row = [], field = "", inQuotes = false;
-  for (let i = 0; i < str.length; i++){
-    const c = str[i];
-    if (inQuotes){
-      if (c === '"' && str[i+1] === '"'){ field += '"'; i++; }
-      else if (c === '"'){ inQuotes = false; }
-      else field += c;
-    } else {
-      if (c === '"') inQuotes = true;
-      else if (c === ','){ row.push(field); field = ""; }
-      else if (c === '\n'){ row.push(field); rows.push(row); row = []; field = ""; }
-      else if (c === '\r'){ /* skip */ }
-      else field += c;
+    if (!sameLine && currentLine.length){
+      lines.push(currentLine.join(""));
+      currentLine = [];
+    }
+    if (sameLine && lastRight !== null){
+      const gap = x - lastRight;
+      const avgCharWidth = (item.width && item.str.length) ? item.width / item.str.length : height * 0.4;
+      if (gap > avgCharWidth * 0.35) currentLine.push(" ");
+    }
+    currentLine.push(item.str);
+    lastY = y;
+    lastRight = x + (item.width || 0);
+
+    if (item.hasEOL){
+      lines.push(currentLine.join(""));
+      currentLine = [];
+      lastY = null; lastRight = null;
     }
   }
-  if (field.length || row.length){ row.push(field); rows.push(row); }
-  return rows.filter(r => r.length > 1 || r[0] !== "");
+  if (currentLine.length) lines.push(currentLine.join(""));
+  return lines.join("\n").replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
 }
-function csvToJson(){
+
+async function doMerge(){
+  const files = mergePicker.getFiles();
+  if (files.length < 2) return setStatus("mergeStatus", "Pick at least 2 PDFs.", "err");
   try{
-    const rows = parseCsv(document.getElementById("csvIn").value.trim());
-    if (rows.length < 1) return setStatus("csvStatus", "No data found.", "err");
-    const headers = rows[0];
-    const out = rows.slice(1).map(r => {
-      const obj = {};
-      headers.forEach((h, i) => obj[h] = r[i] ?? "");
-      return obj;
-    });
-    document.getElementById("csvOut").value = JSON.stringify(out, null, 2);
-    setStatus("csvStatus", `Converted ${out.length} rows.`, "ok");
-  }catch(e){ setStatus("csvStatus", "Error: " + e.message, "err"); }
+    const out = await PDFDocument.create();
+    for (const file of files){
+      const bytes = await file.arrayBuffer();
+      const src = await PDFDocument.load(bytes);
+      const pages = await out.copyPages(src, src.getPageIndices());
+      pages.forEach(p => out.addPage(p));
+    }
+    const blob = new Blob([await out.save()], {type: "application/pdf"});
+    downloadBlob(blob, "merged.pdf");
+    HandyToolx.addFileResult("mergeResult", blob, "merged.pdf");
+    setStatus("mergeStatus", `Merged ${files.length} files.`, "ok");
+  }catch(e){ setStatus("mergeStatus", "Error: " + e.message, "err"); }
 }
-function jsonToCsv(){
+
+async function doSplit(){
+  const file = document.getElementById("splitFile").files[0];
+  if (!file) return setStatus("splitStatus", "Pick a PDF.", "err");
   try{
-    const data = JSON.parse(document.getElementById("csvIn").value);
-    if (!Array.isArray(data) || data.length === 0) return setStatus("csvStatus", "Expected a JSON array of objects.", "err");
-    const headers = Object.keys(data[0]);
-    const esc = v => {
-      const s = String(v ?? "");
-      return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+    const bytes = await file.arrayBuffer();
+    const src = await PDFDocument.load(bytes);
+    const zip = new JSZip();
+    const total = src.getPageCount();
+    const stem = file.name.replace(/\.pdf$/i, "");
+    for (let i = 0; i < total; i++){
+      const out = await PDFDocument.create();
+      const [page] = await out.copyPages(src, [i]);
+      out.addPage(page);
+      zip.file(`${stem}_page_${i+1}.pdf`, await out.save());
+    }
+    const zipBlob = await zip.generateAsync({type: "blob"});
+    downloadBlob(zipBlob, `${stem}_split.zip`);
+    HandyToolx.addFileResult("splitResult", zipBlob, `${stem}_split.zip`);
+    setStatus("splitStatus", `Split into ${total} pages.`, "ok");
+  }catch(e){ setStatus("splitStatus", "Error: " + e.message, "err"); }
+}
+
+async function doDelete(){
+  const file = document.getElementById("deleteFile").files[0];
+  const pages = parsePages(document.getElementById("deletePages").value);
+  if (!file || pages.length === 0) return setStatus("deleteStatus", "Pick a PDF and page numbers.", "err");
+  try{
+    const bytes = await file.arrayBuffer();
+    const doc = await PDFDocument.load(bytes);
+    const total = doc.getPageCount();
+    const toDelete = new Set(pages.map(p => p - 1));
+    for (const idx of [...toDelete].sort((a,b)=>b-a)){
+      if (idx < 0 || idx >= total) return setStatus("deleteStatus", `Page ${idx+1} out of range (1-${total}).`, "err");
+      doc.removePage(idx);
+    }
+    const blob = new Blob([await doc.save()], {type: "application/pdf"});
+    downloadBlob(blob, "deleted_pages.pdf");
+    HandyToolx.addFileResult("deleteResult", blob, "deleted_pages.pdf");
+    setStatus("deleteStatus", `Deleted ${pages.length} page(s).`, "ok");
+  }catch(e){ setStatus("deleteStatus", "Error: " + e.message, "err"); }
+}
+
+async function doExtract(){
+  const file = document.getElementById("extractFile").files[0];
+  const pages = parsePages(document.getElementById("extractPages").value);
+  if (!file || pages.length === 0) return setStatus("extractStatus", "Pick a PDF and page numbers.", "err");
+  try{
+    const bytes = await file.arrayBuffer();
+    const src = await PDFDocument.load(bytes);
+    const total = src.getPageCount();
+    for (const p of pages) if (p < 1 || p > total) return setStatus("extractStatus", `Page ${p} out of range (1-${total}).`, "err");
+    const out = await PDFDocument.create();
+    const copied = await out.copyPages(src, pages.map(p => p - 1));
+    copied.forEach(p => out.addPage(p));
+    const blob = new Blob([await out.save()], {type: "application/pdf"});
+    downloadBlob(blob, "extracted.pdf");
+    HandyToolx.addFileResult("extractResult", blob, "extracted.pdf");
+    setStatus("extractStatus", `Extracted ${pages.length} page(s).`, "ok");
+  }catch(e){ setStatus("extractStatus", "Error: " + e.message, "err"); }
+}
+
+async function doRotate(){
+  const file = document.getElementById("rotateFile").files[0];
+  const angle = parseInt(document.getElementById("rotateAngle").value, 10);
+  const pagesStr = document.getElementById("rotatePages").value.trim();
+  if (!file) return setStatus("rotateStatus", "Pick a PDF.", "err");
+  try{
+    const bytes = await file.arrayBuffer();
+    const doc = await PDFDocument.load(bytes);
+    const total = doc.getPageCount();
+    const pages = pagesStr ? parsePages(pagesStr) : Array.from({length: total}, (_, i) => i + 1);
+    for (const p of pages){
+      if (p < 1 || p > total) return setStatus("rotateStatus", `Page ${p} out of range (1-${total}).`, "err");
+      const page = doc.getPage(p - 1);
+      page.setRotation(degrees((page.getRotation().angle + angle) % 360));
+    }
+    const blob = new Blob([await doc.save()], {type: "application/pdf"});
+    downloadBlob(blob, "rotated.pdf");
+    HandyToolx.addFileResult("rotateResult", blob, "rotated.pdf");
+    setStatus("rotateStatus", `Rotated ${pages.length} page(s) by ${angle}°.`, "ok");
+  }catch(e){ setStatus("rotateStatus", "Error: " + e.message, "err"); }
+}
+
+async function doInfo(){
+  const file = document.getElementById("infoFile").files[0];
+  if (!file) return setStatus("infoStatus", "Pick a PDF.", "err");
+  const out = document.getElementById("infoOut");
+  try{
+    const bytes = await file.arrayBuffer();
+    const doc = await PDFDocument.load(bytes, { ignoreEncryption: true });
+    const info = {
+      filename: file.name, pages: doc.getPageCount(), encrypted: doc.isEncrypted,
+      title: doc.getTitle() || null, author: doc.getAuthor() || null, subject: doc.getSubject() || null,
+      creator: doc.getCreator() || null, producer: doc.getProducer() || null,
     };
-    const lines = [headers.join(",")];
-    data.forEach(obj => lines.push(headers.map(h => esc(obj[h])).join(",")));
-    document.getElementById("csvOut").value = lines.join("\n");
-    setStatus("csvStatus", `Converted ${data.length} rows.`, "ok");
-  }catch(e){ setStatus("csvStatus", "Error: " + e.message, "err"); }
+    out.style.display = "block";
+    out.textContent = JSON.stringify(info, null, 2);
+    setStatus("infoStatus", "Done.", "ok");
+  }catch(e){ setStatus("infoStatus", "Error: " + e.message, "err"); }
 }
 
-function renderMd(){
-  const input = document.getElementById("mdIn").value;
-  document.getElementById("mdOut").innerHTML = marked.parse(input);
-}
-
-function doDiff(){
-  const a = document.getElementById("diffA").value.split("\n");
-  const b = document.getElementById("diffB").value.split("\n");
-  const n = a.length, m = b.length;
-  const dp = Array.from({length: n+1}, () => new Array(m+1).fill(0));
-  for (let i = n-1; i >= 0; i--)
-    for (let j = m-1; j >= 0; j--)
-      dp[i][j] = a[i] === b[j] ? dp[i+1][j+1] + 1 : Math.max(dp[i+1][j], dp[i][j+1]);
-  let i = 0, j = 0;
-  const out = document.getElementById("diffOut");
-  out.innerHTML = "";
-  let added = 0, removed = 0;
-  while (i < n && j < m){
-    if (a[i] === b[j]){
-      out.innerHTML += `<div class="diff-line diff-same">  ${escapeHtml(a[i])}</div>`; i++; j++;
-    } else if (dp[i+1][j] >= dp[i][j+1]){
-      out.innerHTML += `<div class="diff-line diff-del">- ${escapeHtml(a[i])}</div>`; i++; removed++;
-    } else {
-      out.innerHTML += `<div class="diff-line diff-add">+ ${escapeHtml(b[j])}</div>`; j++; added++;
+async function doText(){
+  const file = document.getElementById("textFile").files[0];
+  if (!file) return setStatus("textStatus", "Pick a PDF.", "err");
+  try{
+    const bytes = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
+    let fullText = [];
+    for (let i = 1; i <= pdf.numPages; i++){
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      const pageText = reconstructPageText(content.items);
+      if (pageText.trim()) fullText.push(pageText);
     }
-  }
-  while (i < n){ out.innerHTML += `<div class="diff-line diff-del">- ${escapeHtml(a[i])}</div>`; i++; removed++; }
-  while (j < m){ out.innerHTML += `<div class="diff-line diff-add">+ ${escapeHtml(b[j])}</div>`; j++; added++; }
-  setStatus("diffStatus", `${added} added, ${removed} removed.`, "ok");
+    if (fullText.length === 0) {
+      setStatus("textStatus", "No text found. This PDF may be a scanned image (OCR not supported).", "err");
+      return;
+    }
+    const blob = new Blob([fullText.join("\n\n")], {type: "text/plain"});
+    const outName = file.name.replace(/\.pdf$/i, "") + "_text.txt";
+    downloadBlob(blob, outName);
+    HandyToolx.addFileResult("textResult", blob, outName);
+    setStatus("textStatus", `Extracted text from ${pdf.numPages} page(s).`, "ok");
+  }catch(e){ setStatus("textStatus", "Error: " + e.message, "err"); }
 }
-function escapeHtml(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
-
-function doCount(){
-  const text = document.getElementById("countIn").value;
-  const words = text.trim() ? text.trim().split(/\s+/).length : 0;
-  const chars = text.length;
-  const charsNoSpace = text.replace(/\s/g, "").length;
-  const sentences = (text.match(/[.!?]+(\s|$)/g) || []).length;
-  document.getElementById("cWords").textContent = words;
-  document.getElementById("cChars").textContent = chars;
-  document.getElementById("cCharsNoSpace").textContent = charsNoSpace;
-  document.getElementById("cSentences").textContent = sentences;
-  document.getElementById("cReading").textContent = Math.max(1, Math.round(words / 200));
-}
-
-function convertCase(mode){
-  const text = document.getElementById("caseIn").value;
-  let out = text;
-  const words = text.trim().split(/\s+/).filter(Boolean);
-  if (mode === "upper") out = text.toUpperCase();
-  else if (mode === "lower") out = text.toLowerCase();
-  else if (mode === "title") out = words.map(w => w[0]?.toUpperCase() + w.slice(1).toLowerCase()).join(" ");
-  else if (mode === "sentence") out = text.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g, c => c.toUpperCase());
-  else if (mode === "camel") out = words.map((w,i) => i===0 ? w.toLowerCase() : w[0].toUpperCase()+w.slice(1).toLowerCase()).join("");
-  else if (mode === "snake") out = words.map(w => w.toLowerCase()).join("_");
-  else if (mode === "kebab") out = words.map(w => w.toLowerCase()).join("-");
-  document.getElementById("caseOut").value = out;
-}
-
-const loremWords = "lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua enim ad minim veniam quis nostrud exercitation ullamco laboris nisi aliquip ex ea commodo consequat duis aute irure in reprehenderit voluptate velit esse cillum eu fugiat nulla pariatur excepteur sint occaecat cupidatat non proident sunt culpa qui officia deserunt mollit anim id est laborum".split(" ");
-function loremSentence(minW, maxW){
-  const len = minW + Math.floor(Math.random() * (maxW - minW));
-  const ws = [];
-  for (let i = 0; i < len; i++) ws.push(loremWords[Math.floor(Math.random() * loremWords.length)]);
-  ws[0] = ws[0][0].toUpperCase() + ws[0].slice(1);
-  return ws.join(" ") + ".";
-}
-function loremParagraph(){
-  const sentences = 3 + Math.floor(Math.random() * 4);
-  return Array.from({length: sentences}, () => loremSentence(6, 16)).join(" ");
-}
-function genLorem(){
-  const n = parseInt(document.getElementById("loremParas").value, 10) || 1;
-  const classic = document.getElementById("loremClassic").value === "yes";
-  const paras = [];
-  for (let i = 0; i < n; i++){
-    let p = loremParagraph();
-    if (i === 0 && classic) p = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " + p;
-    paras.push(p);
-  }
-  document.getElementById("loremOut").value = paras.join("\n\n");
-}
-function flashCopied(btn, label){
-  if (!btn) return;
-  clearTimeout(btn._copyTimer);
-  if (!btn.dataset.label) btn.dataset.label = btn.textContent;
-  btn.textContent = label || "Copied!";
-  btn.classList.add("copied");
-  btn._copyTimer = setTimeout(() => {
-    btn.textContent = btn.dataset.label;
-    btn.classList.remove("copied");
-  }, 1300);
-}
-function copyLorem(btn){
-  const out = document.getElementById("loremOut");
-  if (!out.value) return;
-  out.select();
-  if (document.execCommand("copy")) flashCopied(btn);
-}
-
-renderMd();
 </script>
 </body>
 </html>
