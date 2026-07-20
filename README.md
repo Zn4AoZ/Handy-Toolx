@@ -28,11 +28,12 @@ No sign-up, no uploads, no tracking. Just open and use.
 You are welcome to use this repository as a template and create even better and more useful tools.
 
 ## Credits
-JSZip – MIT/GPLv3 – Zip file handling
-pdf-lib – MIT – PDF generation
-PDF.js – Apache-2.0 – PDF rendering by Mozilla
-Marked – MIT – Markdown parsing
-QRCode.js – MIT – QR code generation
-Pako – MIT – zlib port
+**JSZip** – MIT/GPLv3 – Zip file handling
+**pdf-lib** – MIT – PDF generation
+**PDF.js** – Apache-2.0 – PDF rendering by Mozilla
+**Marked** – MIT – Markdown parsing
+**QRCode.js** – MIT – QR code generation
+**Pako** – MIT – zlib port
+
 Built with open-source software.
 
