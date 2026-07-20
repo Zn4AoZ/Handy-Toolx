@@ -1,116 +1,1595 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Handy Toolx</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finatex '26 — The Hub of Analytics</title>
+    <meta name="description" content="Finatex '26 — Flagship inter-collegiate finance fest by CHRIST (Deemed to be University), Pune Lavasa Campus. Compete. Strategize. Dominate.">
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <script src="assets/js/theme.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
     <style>
-        :root{--bg:#F0EAE0;--ink:#1a1a1a;--ink2:#4f4b44;--ink3:#6f6a5f;--rust:#B5392A;--paper:#FBF8F2;--mono:'IBM Plex Mono','SF Mono',monospace;--sans:'Archivo',system-ui,sans-serif;--grid:repeating-linear-gradient(0deg,transparent,transparent 47px,rgba(26,26,26,.06)47px,rgba(26,26,26,.06)48px),repeating-linear-gradient(90deg,transparent,transparent 47px,rgba(26,26,26,.06)47px,rgba(26,26,26,.06)48px)}
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{background:var(--bg);background-image:var(--grid);font-family:var(--sans);color:var(--ink);padding:2rem 1.5rem;min-height:100vh}
-        .app{max-width:1200px;margin:0 auto}
-        .header{display:flex;justify-content:space-between;align-items:baseline;padding:1.5rem 0 1.75rem;border-bottom:2px solid var(--ink);margin-bottom:2.5rem;flex-wrap:wrap;gap:1rem}
-        .header-left{display:flex;align-items:baseline;gap:1.25rem;flex-wrap:wrap}
-        .brand-tag{font-family:var(--mono);font-weight:600;font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:var(--rust);border:2px solid var(--ink);padding:.3rem .9rem;background:var(--paper)}
-        .brand-title{font-weight:800;font-size:2rem;letter-spacing:-.025em}
-        .brand-title .rust{color:var(--rust)}
-        .brand-sub{font-family:var(--mono);font-size:.7rem;color:var(--ink2);letter-spacing:.18em;text-transform:uppercase}
-        .header-right{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
-        .header-meta{font-family:var(--mono);font-size:.6rem;color:var(--ink3);letter-spacing:.18em;text-transform:uppercase;border:2px solid var(--ink);padding:.25rem .75rem;background:var(--paper)}
-        .github-link{display:flex;align-items:center;gap:.4rem;font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;color:var(--ink);border:2px solid var(--ink);padding:.2rem .7rem .2rem .5rem;background:var(--paper);text-decoration:none;transition:background .2s,color .2s;line-height:1}
-        .github-link:hover{background:var(--ink);color:var(--paper)}
-        .github-link:hover .github-icon path{fill:var(--paper)}
-        .github-icon{width:18px;height:18px;display:block;flex-shrink:0}
-        .github-icon path{fill:var(--ink);transition:fill .2s}
-        .deck{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.5rem}
-        .card{background:var(--paper);border:2px solid var(--ink);padding:1.5rem 1.25rem 1.25rem;display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s}
-        .card:hover{transform:translateY(-4px);box-shadow:0 8px 0 0 var(--ink)}
-        .card-icon svg{width:32px;height:32px;stroke:var(--rust);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;margin-bottom:.5rem}
-        .card-label{font-family:var(--mono);font-weight:600;font-size:.55rem;letter-spacing:.28em;text-transform:uppercase;color:var(--rust);margin-bottom:.2rem}
-        .card-title{font-weight:800;font-size:1.35rem;letter-spacing:-.025em;margin-bottom:.15rem}
-        .card-count{font-family:var(--mono);font-size:.6rem;color:var(--ink3);margin-bottom:.6rem;letter-spacing:.05em}
-        .card-tools{font-family:var(--mono);font-size:.6rem;color:var(--ink2);line-height:1.7;margin-bottom:1rem;flex:1}
-        .card-tools span{display:inline-block;background:var(--bg);padding:.05rem .5rem;margin:0 .2rem .15rem 0;border:1px solid #cec8be;font-size:.55rem}
-        .card-action{font-family:var(--mono);font-weight:600;font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;color:#fff;background:var(--rust);border:2px solid var(--ink);padding:.5rem 1rem;text-align:center;text-decoration:none;width:100%;transition:background .2s;cursor:pointer}
-        .card-action:hover{background:var(--ink)}
-        .footer{margin-top:3rem;padding-top:1.25rem;border-top:2px solid var(--ink);font-family:var(--mono);font-size:.55rem;color:var(--ink3);letter-spacing:.18em;text-transform:uppercase;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
-        @media(max-width:640px){body{padding:1rem}.brand-title{font-size:1.5rem}.deck{grid-template-columns:1fr}}
-        body{transition:background-color .2s,color .2s}
+        /* ============================
+             BASE / RESET
+             ============================ */
+        :root {
+            --navy: #0A0E17;
+            --navy-light: #1A1F2E;
+            --cream: #F5F0E8;
+            --gold: #D4AF37;
+            --cyan: #00E5FF;
+            --muted: #6B7280;
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --nav-height: 72px;
+            --transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: auto;
+            background: var(--navy);
+            color: var(--cream);
+            font-family: var(--font-body);
+            font-size: 16px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background: var(--navy);
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                cursor: auto;
+            }
+        }
+
+        /* ============================
+             TYPOGRAPHY
+             ============================ */
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: var(--font-display);
+            font-weight: 700;
+            line-height: 1.1;
+        }
+
+        .mono {
+            font-family: var(--font-mono);
+        }
+
+        .gold {
+            color: var(--gold);
+        }
+
+        .cyan {
+            color: var(--cyan);
+        }
+
+        .muted {
+            color: var(--muted);
+        }
+
+        /* ============================
+             CUSTOM CURSOR
+             ============================ */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease, background 0.3s ease;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+        }
+        .cursor.hover {
+            width: 50px;
+            height: 50px;
+            background: rgba(212, 175, 55, 0.15);
+        }
+
+        @media (max-width: 768px) {
+            .cursor {
+                display: none;
+            }
+        }
+
+        /* ============================
+             NAVIGATION
+             ============================ */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--nav-height);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 48px;
+            transition: background 0.4s ease, backdrop-filter 0.4s ease;
+        }
+        nav.nav-solid {
+            background: rgba(10, 14, 23, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.08);
+        }
+        .nav-logo {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--cream);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+        .nav-logo span {
+            color: var(--gold);
+        }
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+        .nav-links a {
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+            cursor: none;
+        }
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--cream);
+            font-size: 1.5rem;
+            cursor: none;
+            z-index: 1001;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 0 24px;
+            }
+            .nav-links {
+                position: fixed;
+                inset: 0;
+                background: var(--navy);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 40px;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.4s ease;
+                z-index: 1000;
+            }
+            .nav-links.open {
+                opacity: 1;
+                pointer-events: auto;
+            }
+            .nav-links a {
+                font-size: 1.5rem;
+            }
+            .hamburger {
+                display: block;
+            }
+        }
+
+        /* ============================
+             PRELOADER
+             ============================ */
+        .preloader {
+            position: fixed;
+            inset: 0;
+            z-index: 10001;
+            background: var(--navy);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+        .preloader-content {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            overflow: hidden;
+        }
+        .preloader-letter {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(3rem, 8vw, 6rem);
+            color: var(--cream);
+            display: inline-block;
+        }
+        .preloader-year {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(3rem, 8vw, 6rem);
+            color: var(--gold);
+            display: inline-block;
+        }
+
+        /* ============================
+             SECTIONS (Shared)
+             ============================ */
+        section {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+        .section-padded {
+            padding: 120px 48px;
+        }
+        @media (max-width: 768px) {
+            .section-padded {
+                padding: 80px 24px;
+            }
+        }
+
+        /* ============================
+             HERO SECTION
+             ============================ */
+        .hero-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+        .coin-container {
+            perspective: 1200px;
+            width: min(300px, 60vw);
+            height: min(300px, 60vw);
+            margin-bottom: 32px;
+        }
+        .coin {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+        .coin-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .coin-front {
+            background: radial-gradient(circle at 40% 40%, #e6c84d, var(--gold) 60%, #8b6914 100%);
+            border: 4px solid #8b6914;
+            box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.3), 0 0 80px rgba(212, 175, 55, 0.25);
+        }
+        .coin-back {
+            background: radial-gradient(circle at 60% 60%, #e6c84d, var(--gold) 60%, #8b6914 100%);
+            border: 4px solid #8b6914;
+            box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.3), 0 0 80px rgba(212, 175, 55, 0.25);
+            transform: rotateY(180deg);
+        }
+        .coin-text {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            color: #3d2a00;
+            text-align: center;
+            line-height: 1;
+        }
+        .coin-text-small {
+            font-family: var(--font-mono);
+            font-size: clamp(0.7rem, 2vw, 1.2rem);
+            color: #5c3d00;
+            margin-top: 4px;
+        }
+        .hero-title {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(3rem, 10vw, 8rem);
+            color: var(--cream);
+            line-height: 1;
+            letter-spacing: -0.03em;
+        }
+        .hero-title .year {
+            color: var(--gold);
+        }
+        .hero-subtitle {
+            font-size: clamp(0.9rem, 2vw, 1.2rem);
+            color: var(--muted);
+            margin-top: 16px;
+            max-width: 600px;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            margin-top: 32px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .btn {
+            display: inline-block;
+            padding: 14px 36px;
+            border-radius: 999px;
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.4s var(--transition-smooth);
+            cursor: none;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary {
+            background: transparent;
+            color: var(--gold);
+            border: 2px solid var(--gold);
+        }
+        .btn-primary:hover {
+            background: var(--gold);
+            color: var(--navy);
+            transform: scale(1.05);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: var(--cream);
+            border: 2px solid rgba(245, 240, 232, 0.3);
+        }
+        .btn-secondary:hover {
+            border-color: var(--cream);
+            transform: scale(1.05);
+        }
+        .scroll-indicator {
+            position: absolute;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            color: var(--muted);
+            font-size: 1.2rem;
+        }
+        @keyframes bounce {
+            0%,
+            100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            50% {
+                transform: translateX(-50%) translateY(12px);
+            }
+        }
+
+        /* ============================
+             ABOUT / MANIFESTO
+             ============================ */
+        .about-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 120px 48px;
+            gap: 48px;
+        }
+        .manifesto-text {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: clamp(1.5rem, 4vw, 2.8rem);
+            max-width: 800px;
+            line-height: 1.3;
+            color: var(--cream);
+        }
+        .manifesto-word {
+            display: inline-block;
+        }
+        .quote-block {
+            font-style: italic;
+            font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+            color: var(--muted);
+            max-width: 600px;
+            position: relative;
+        }
+        .quote-block::before {
+            content: '"';
+            font-family: var(--font-display);
+            font-size: 4rem;
+            color: var(--gold);
+            position: absolute;
+            top: -30px;
+            left: -20px;
+            opacity: 0.4;
+        }
+        .quote-attribution {
+            font-style: normal;
+            font-weight: 600;
+            color: var(--gold);
+            margin-top: 8px;
+        }
+        .parallax-image {
+            width: 100%;
+            max-width: 700px;
+            height: 300px;
+            border-radius: 20px;
+            overflow: hidden;
+            background: var(--navy-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+        }
+        .parallax-image img {
+            width: 120%;
+            height: 120%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        /* ============================
+             EVENTS (Horizontal Scroll)
+             ============================ */
+        .events-section {
+            position: relative;
+        }
+        .events-sticky-label {
+            position: sticky;
+            top: var(--nav-height);
+            z-index: 10;
+            padding: 24px 48px;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(2rem, 6vw, 5rem);
+            color: var(--cream);
+            pointer-events: none;
+        }
+        .events-track-wrapper {
+            overflow: hidden;
+            padding: 0 48px 60px;
+        }
+        .events-track {
+            display: flex;
+            gap: 24px;
+            will-change: transform;
+        }
+        .event-card {
+            min-width: 320px;
+            max-width: 380px;
+            flex-shrink: 0;
+            background: var(--navy-light);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: transform 0.4s var(--transition-smooth), box-shadow 0.4s ease;
+            cursor: none;
+        }
+        .event-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 30px 60px rgba(212, 175, 55, 0.12);
+        }
+        .event-card-img {
+            width: 100%;
+            height: 220px;
+            background: var(--navy);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: transform 0.6s ease;
+        }
+        .event-card:hover .event-card-img {
+            transform: scale(1.1);
+        }
+        .event-card-img .placeholder-img {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            color: var(--gold);
+            opacity: 0.5;
+        }
+        .event-card-body {
+            padding: 24px;
+        }
+        .event-card-body h3 {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+            color: var(--cream);
+        }
+        .event-card-body p {
+            color: var(--muted);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* ============================
+             3D TROPHY ASSEMBLY
+             ============================ */
+        .trophy-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 32px;
+        }
+        .trophy-assembly {
+            position: relative;
+            width: 200px;
+            height: 280px;
+        }
+        .trophy-piece {
+            position: absolute;
+            opacity: 0;
+            transition: all 0.8s var(--transition-smooth);
+        }
+        .trophy-base {
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            width: 120px;
+            height: 30px;
+            background: linear-gradient(180deg, #e6c84d, #8b6914);
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+        }
+        .trophy-stem {
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50px);
+            width: 20px;
+            height: 60px;
+            background: linear-gradient(180deg, #d4af37, #a07828);
+            border-radius: 4px;
+        }
+        .trophy-cup {
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-80px);
+            width: 100px;
+            height: 90px;
+            background: radial-gradient(ellipse at 50% 30%, #f0d060, #d4af37 50%, #8b6914 100%);
+            border-radius: 50% 50% 20px 20px;
+            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.35);
+        }
+        .trophy-handle-left {
+            bottom: 105px;
+            left: 10px;
+            transform: translateX(-40px);
+            width: 30px;
+            height: 55px;
+            border: 6px solid #d4af37;
+            border-right: none;
+            border-radius: 30px 0 0 30px;
+        }
+        .trophy-handle-right {
+            bottom: 105px;
+            right: 10px;
+            transform: translateX(40px);
+            width: 30px;
+            height: 55px;
+            border: 6px solid #d4af37;
+            border-left: none;
+            border-radius: 0 30px 30px 0;
+        }
+        .trophy-piece.assembled {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        .trophy-handle-left.assembled,
+        .trophy-handle-right.assembled {
+            transform: translateX(0);
+        }
+        .trophy-label {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(1.8rem, 5vw, 3.5rem);
+            color: var(--cream);
+        }
+        .trophy-sub {
+            color: var(--muted);
+            font-size: 1.1rem;
+        }
+
+        /* ============================
+             SCHEDULE TIMELINE
+             ============================ */
+        .schedule-section {
+            padding: 120px 48px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .schedule-title {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(2rem, 6vw, 5rem);
+            color: var(--cream);
+            text-align: center;
+            margin-bottom: 64px;
+        }
+        .timeline {
+            position: relative;
+            max-width: 600px;
+            width: 100%;
+        }
+        .timeline-line {
+            position: absolute;
+            left: 19px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--gold);
+            transform-origin: top center;
+        }
+        .timeline-item {
+            position: relative;
+            padding-left: 56px;
+            margin-bottom: 48px;
+        }
+        .timeline-dot {
+            position: absolute;
+            left: 12px;
+            top: 4px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--gold);
+            border: 3px solid var(--navy);
+            box-shadow: 0 0 0 2px var(--gold);
+        }
+        .timeline-day {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--gold);
+            margin-bottom: 4px;
+        }
+        .timeline-time {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--cyan);
+            margin-bottom: 2px;
+        }
+        .timeline-desc {
+            color: var(--cream);
+            font-weight: 500;
+        }
+
+        /* ============================
+             STATS COUNTER
+             ============================ */
+        .stats-section {
+            height: 100vh;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 60px;
+            text-align: center;
+            background: var(--navy);
+        }
+        .stat-block {
+            flex: 1 1 200px;
+            max-width: 280px;
+        }
+        .stat-number {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(3rem, 8vw, 6rem);
+            color: var(--gold);
+            line-height: 1;
+        }
+        .stat-label {
+            color: var(--muted);
+            font-size: 1rem;
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        /* ============================
+             SPEAKERS
+             ============================ */
+        .speakers-section {
+            padding: 120px 48px;
+            text-align: center;
+        }
+        .speakers-title {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(2rem, 6vw, 5rem);
+            color: var(--cream);
+            margin-bottom: 48px;
+        }
+        .speakers-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 32px;
+            justify-content: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .speaker-card {
+            flex: 1 1 280px;
+            max-width: 340px;
+            background: var(--navy-light);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: transform 0.4s var(--transition-smooth);
+            cursor: none;
+        }
+        .speaker-card:hover {
+            transform: translateY(-8px);
+        }
+        .speaker-card-img {
+            width: 100%;
+            height: 260px;
+            background: var(--navy);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .speaker-card-img .placeholder-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--navy-light);
+            border: 2px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-display);
+            font-size: 2rem;
+            color: var(--gold);
+        }
+        .speaker-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%);
+            transition: filter 0.6s ease, transform 0.6s ease;
+        }
+        .speaker-card:hover img {
+            filter: grayscale(0%);
+            transform: scale(1.05);
+        }
+        .speaker-card-body {
+            padding: 20px;
+        }
+        .speaker-card-body h3 {
+            color: var(--cream);
+            font-size: 1.1rem;
+        }
+        .speaker-card-body .role {
+            color: var(--gold);
+            font-size: 0.85rem;
+        }
+        .speaker-card-body .company {
+            color: var(--muted);
+            font-size: 0.8rem;
+        }
+
+        /* ============================
+             GALLERY
+             ============================ */
+        .gallery-section {
+            padding: 120px 48px;
+            text-align: center;
+        }
+        .gallery-title {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(2rem, 6vw, 5rem);
+            color: var(--cream);
+            margin-bottom: 48px;
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 16px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .gallery-item {
+            border-radius: 16px;
+            overflow: hidden;
+            aspect-ratio: 3/4;
+            background: var(--navy-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: none;
+            position: relative;
+        }
+        .gallery-item.tall {
+            aspect-ratio: 2/3;
+        }
+        .gallery-item.wide {
+            aspect-ratio: 4/3;
+        }
+        .gallery-item .placeholder-img {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--muted);
+            text-align: center;
+            padding: 16px;
+        }
+        .gallery-item img {
+            width: 130%;
+            height: 130%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+        .gallery-item:hover img {
+            transform: scale(1.08);
+        }
+
+        /* ============================
+             CTA
+             ============================ */
+        .cta-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: linear-gradient(180deg, var(--navy) 0%, #0d1220 50%, var(--navy) 100%);
+            position: relative;
+        }
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(212, 175, 55, 0.04) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .cta-title {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(2.5rem, 10vw, 7rem);
+            color: var(--cream);
+            line-height: 1;
+            position: relative;
+            z-index: 1;
+        }
+        .cta-subtitle {
+            color: var(--muted);
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin-top: 16px;
+            position: relative;
+            z-index: 1;
+        }
+        .cta-countdown {
+            font-family: var(--font-mono);
+            font-size: 1.4rem;
+            color: var(--gold);
+            margin-top: 24px;
+            position: relative;
+            z-index: 1;
+        }
+        .cta-buttons {
+            margin-top: 32px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ============================
+             FOOTER
+             ============================ */
+        footer {
+            padding: 80px 48px 40px;
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+            text-align: center;
+        }
+        .footer-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 48px;
+            justify-content: center;
+            margin-bottom: 48px;
+            text-align: left;
+        }
+        .footer-col h4 {
+            color: var(--gold);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 16px;
+        }
+        .footer-col a {
+            display: block;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            transition: color 0.3s ease;
+            cursor: none;
+        }
+        .footer-col a:hover {
+            color: var(--cream);
+        }
+        .finatex-signature {
+            width: 200px;
+            height: 60px;
+            margin: 0 auto 24px;
+        }
+        .signature-path {
+            stroke-dasharray: 600;
+            stroke-dashoffset: 600;
+        }
+        .signature-path.animate {
+            animation: drawSignature 2s ease forwards;
+        }
+        @keyframes drawSignature {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+        .footer-bottom {
+            color: var(--muted);
+            font-size: 0.8rem;
+        }
+
+        /* ============================
+             PAGE TRANSITION OVERLAY
+             ============================ */
+        .page-transition {
+            position: fixed;
+            inset: 0;
+            z-index: 10002;
+            background: var(--navy);
+            transform: scaleY(0);
+            transform-origin: top;
+            pointer-events: none;
+        }
+
+        /* ============================
+             REDUCED MOTION
+             ============================ */
+        @media (prefers-reduced-motion: reduce) {
+            .coin,
+            .coin-face,
+            .event-card,
+            .event-card-img,
+            .speaker-card img,
+            .gallery-item img,
+            .trophy-piece,
+            .cursor,
+            .preloader-letter,
+            .preloader-year,
+            .signature-path {
+                animation: none !important;
+                transition: none !important;
+            }
+            .scroll-indicator {
+                animation: none !important;
+            }
+            .cursor {
+                display: none;
+            }
+            body {
+                cursor: auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .events-sticky-label {
+                padding: 16px 24px;
+            }
+            .events-track-wrapper {
+                padding: 0 24px 40px;
+            }
+            .event-card {
+                min-width: 260px;
+            }
+            .trophy-assembly {
+                width: 150px;
+                height: 210px;
+            }
+            .trophy-base {
+                width: 90px;
+                height: 22px;
+            }
+            .trophy-stem {
+                width: 16px;
+                height: 45px;
+                bottom: 22px;
+            }
+            .trophy-cup {
+                width: 75px;
+                height: 68px;
+                bottom: 67px;
+            }
+            .trophy-handle-left {
+                bottom: 78px;
+                left: 5px;
+                width: 22px;
+                height: 40px;
+                border-width: 4px;
+            }
+            .trophy-handle-right {
+                bottom: 78px;
+                right: 5px;
+                width: 22px;
+                height: 40px;
+                border-width: 4px;
+            }
+        }
     </style>
-    <link rel="stylesheet" href="assets/css/theme.css">
 </head>
 <body>
-<div class="app">
-    <header class="header">
-        <div class="header-left">
-            <span class="brand-tag">Zn4AoZ</span>
-            <span class="brand-title">Handy <span class="rust">Toolx</span></span>
-            <span class="brand-sub">workshop</span>
-        </div>
-        <div class="header-right">
-            <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false" title="Switch to dark mode">
-                <svg class="icon icon-moon" viewBox="0 0 16 16" fill="currentColor"><path d="M14 8.6A6.4 6.4 0 0 1 6.9 2 6.6 6.6 0 1 0 14 8.6z"/></svg>
-                <svg class="icon icon-sun" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="3.3"/><path d="M8 0v2M8 14v2M16 8h-2M2 8H0M13.66 2.34l-1.42 1.42M3.76 12.24l-1.42 1.42M13.66 13.66l-1.42-1.42M3.76 3.76 2.34 2.34" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                <span id="themeToggleLabel">Dark</span>
-            </button>
-            <a href="https://github.com/Zn4AoZ/Handy-Toolx" class="github-link" target="_blank" rel="noopener noreferrer">
-                <svg class="github-icon" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-                <span>GitHub</span>
-            </a>
-            <span class="header-meta">36 tools</span>
-        </div>
-    </header>
 
-    <div class="deck">
-        <div class="card">
-            <div class="card-icon"><svg viewBox="0 0 32 32"><path d="M6 4h14l6 6v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="M20 4v6h6"/><path d="M12 15v6"/><path d="M16 15v6"/><path d="M20 15v6"/></svg></div>
-            <div class="card-label">category</div>
-            <div class="card-title">PDF</div>
-            <div class="card-count">10 tools</div>
-            <div class="card-tools"><span>merge</span><span>split</span><span>delete</span><span>extract</span><span>rotate</span><span>info</span><span>remove metadata</span><span>add password</span><span>remove password</span><span>extract text</span></div>
-            <a href="tool-pages/pdf.html" class="card-action">open →</a>
-        </div>
-        <div class="card">
-            <div class="card-icon"><svg viewBox="0 0 32 32"><rect x="4" y="6" width="24" height="20" rx="2"/><circle cx="11" cy="13" r="3"/><path d="M26 22l-6-6-5 5-4-4-5 5"/></svg></div>
-            <div class="card-label">category</div>
-            <div class="card-title">Image</div>
-            <div class="card-count">7 tools</div>
-            <div class="card-tools"><span>compress</span><span>convert</span><span>crop</span><span>watermark</span><span>strip meta</span><span>image info</span><span>to base64</span></div>
-            <a href="tool-pages/image.html" class="card-action">open →</a>
-        </div>
-        <div class="card">
-            <div class="card-icon"><svg viewBox="0 0 32 32"><path d="M6 8h20"/><path d="M6 12h14"/><path d="M6 16h20"/><path d="M6 20h14"/><path d="M6 24h20"/></svg></div>
-            <div class="card-label">category</div>
-            <div class="card-title">Text &amp; Data</div>
-            <div class="card-count">7 tools</div>
-            <div class="card-tools"><span>JSON</span><span>CSV↔JSON</span><span>Markdown</span><span>diff</span><span>word count</span><span>case</span><span>lorem</span></div>
-            <a href="tool-pages/text-data.html" class="card-action">open →</a>
-        </div>
-        <div class="card">
-            <div class="card-icon"><svg viewBox="0 0 32 32"><polyline points="10 10 4 16 10 22"/><polyline points="22 10 28 16 22 22"/><line x1="18" y1="8" x2="14" y2="24"/></svg></div>
-            <div class="card-label">category</div>
-            <div class="card-title">Dev</div>
-            <div class="card-count">8 tools</div>
-            <div class="card-tools"><span>UUID</span><span>hash</span><span>base64</span><span>regex</span><span>QR generate</span><span>QR scan</span><span>password</span><span>JWT</span></div>
-            <a href="tool-pages/dev.html" class="card-action">open →</a>
-        </div>
-        <div class="card">
-            <div class="card-icon"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M16 4a12 12 0 0 1 0 24"/><path d="M16 4a12 12 0 0 0 0 24"/><path d="M4 16h24"/></svg></div>
-            <div class="card-label">category</div>
-            <div class="card-title">Color</div>
-            <div class="card-count">4 tools</div>
-            <div class="card-tools"><span>palette</span><span>converter</span><span>contrast</span><span>gradient</span></div>
-            <a href="tool-pages/color.html" class="card-action">open →</a>
+    <!-- Preloader -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-content">
+            <span class="preloader-letter">F</span>
+            <span class="preloader-letter">I</span>
+            <span class="preloader-letter">N</span>
+            <span class="preloader-letter">A</span>
+            <span class="preloader-letter">T</span>
+            <span class="preloader-letter">E</span>
+            <span class="preloader-letter">X</span>
+            <span class="preloader-year">'26</span>
         </div>
     </div>
 
-    <div class="footer">
-        <span>Handy Toolx · all client-side</span>
-        <span>workshop · 36 tools</span>
-    </div>
-</div>
+    <!-- Page Transition -->
+    <div class="page-transition" id="pageTransition"></div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+
+    <!-- Navigation -->
+    <nav id="nav">
+        <a href="#" class="nav-logo">Fin<span>atex</span>'26</a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#about" data-link>About</a></li>
+            <li><a href="#events" data-link>Events</a></li>
+            <li><a href="#schedule" data-link>Schedule</a></li>
+            <li><a href="#speakers" data-link>Speakers</a></li>
+            <li><a href="#gallery" data-link>Gallery</a></li>
+            <li><a href="#cta" data-link>Register</a></li>
+        </ul>
+        <button class="hamburger" id="hamburger" aria-label="Menu">☰</button>
+    </nav>
+
+    <!-- SECTION 1: HERO -->
+    <section class="hero-section" id="hero">
+        <div class="coin-container">
+            <div class="coin" id="coin">
+                <div class="coin-face coin-front">
+                    <span class="coin-text">FINATEX</span>
+                    <span class="coin-text-small">The Hub of Analytics</span>
+                </div>
+                <div class="coin-face coin-back">
+                    <span class="coin-text">'26</span>
+                    <span class="coin-text-small">CHRIST Lavasa</span>
+                </div>
+            </div>
+        </div>
+        <h1 class="hero-title">FINATEX<span class="year">'26</span></h1>
+        <p class="hero-subtitle">The Hub of Analytics — CHRIST (Deemed to be University), Pune Lavasa Campus</p>
+        <div class="hero-buttons">
+            <a href="#cta" class="btn btn-primary">Register Now</a>
+            <a href="#events" class="btn btn-secondary">Explore Events</a>
+        </div>
+        <div class="scroll-indicator">↓</div>
+    </section>
+
+    <!-- SECTION 2: ABOUT / MANIFESTO -->
+    <section class="about-section" id="about">
+        <p class="manifesto-text" id="manifesto">
+            <span class="manifesto-word">Since</span>
+            <span class="manifesto-word">2022,</span>
+            <span class="manifesto-word">we've</span>
+            <span class="manifesto-word">been</span>
+            <span class="manifesto-word">redefining</span>
+            <span class="manifesto-word">the</span>
+            <span class="manifesto-word">limits</span>
+            <span class="manifesto-word">of</span>
+            <span class="manifesto-word">inter-collegiate</span>
+            <span class="manifesto-word">finance</span>
+            <span class="manifesto-word">competition.</span>
+        </p>
+        <div class="parallax-image" id="parallaxImage">
+            <span>Finatex 2024 — Group Photo</span>
+        </div>
+        <div class="quote-block">
+            It doesn't matter where you start, it's how you strategize from there.
+            <div class="quote-attribution">— Finatex Motto</div>
+        </div>
+        <div style="display:flex;gap:48px;flex-wrap:wrap;justify-content:center;margin-top:16px;">
+            <div style="text-align:center;"><span class="mono gold" style="font-size:2rem;font-weight:700;">61+</span><br><span class="muted" style="font-size:0.85rem;">Participants</span></div>
+            <div style="text-align:center;"><span class="mono gold" style="font-size:2rem;font-weight:700;">3+</span><br><span class="muted" style="font-size:0.85rem;">Colleges</span></div>
+            <div style="text-align:center;"><span class="mono gold" style="font-size:2rem;font-weight:700;">6</span><br><span class="muted" style="font-size:0.85rem;">Events</span></div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: EVENTS SHOWCASE -->
+    <section class="events-section" id="events">
+        <div class="events-sticky-label">EVENTS<br><span style="font-size:0.5em;color:var(--muted);">HALL OF FAME</span></div>
+        <div class="events-track-wrapper">
+            <div class="events-track" id="eventsTrack">
+                <div class="event-card">
+                    <div class="event-card-img"><span class="placeholder-img">Biz<br>Arena</span></div>
+                    <div class="event-card-body"><h3>Biz Arena</h3><p>The flagship business strategy competition. Pitch, negotiate, and conquer the corporate world.</p></div>
+                </div>
+                <div class="event-card">
+                    <div class="event-card-img"><span class="placeholder-img">Risk &<br>Reward</span></div>
+                    <div class="event-card-body"><h3>Risk & Reward</h3><p>Navigate volatile markets. Balance risk against reward in real-time trading simulations.</p></div>
+                </div>
+                <div class="event-card">
+                    <div class="event-card-img"><span class="placeholder-img">Corporate<br>Casino</span></div>
+                    <div class="event-card-body"><h3>Corporate Casino</h3><p>High-stakes financial decision-making. Every move counts in this game of strategy.</p></div>
+                </div>
+                <div class="event-card">
+                    <div class="event-card-img"><span class="placeholder-img">Dalal<br>Street</span></div>
+                    <div class="event-card-body"><h3>The Dalal Street</h3><p>Live stock market simulation. Buy, sell, and build your portfolio to outperform the index.</p></div>
+                </div>
+                <div class="event-card">
+                    <div class="event-card-img"><span class="placeholder-img">Among<br>Us</span></div>
+                    <div class="event-card-body"><h3>Among Us</h3><p>Finance meets mystery. Identify the impostors while managing your fiscal responsibilities.</p></div>
+                </div>
+                <div class="event-card">
+                    <div class="event-card-img"><span class="placeholder-img">Cultural<br>Evening</span></div>
+                    <div class="event-card-body"><h3>Cultural Evening</h3><p>Unwind with music, dance, and performances. Network with peers from across Pune.</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: 3D TROPHY ASSEMBLY -->
+    <section class="trophy-section" id="trophySection">
+        <div class="trophy-assembly">
+            <div class="trophy-piece trophy-base" id="trophyBase"></div>
+            <div class="trophy-piece trophy-stem" id="trophyStem"></div>
+            <div class="trophy-piece trophy-cup" id="trophyCup"></div>
+            <div class="trophy-piece trophy-handle-left" id="trophyHandleL"></div>
+            <div class="trophy-piece trophy-handle-right" id="trophyHandleR"></div>
+        </div>
+        <div class="trophy-label">THE PRIZE</div>
+        <div class="trophy-sub">Worth competing for</div>
+    </section>
+
+    <!-- SECTION 5: SCHEDULE TIMELINE -->
+    <section class="schedule-section" id="schedule">
+        <div class="schedule-title">SCHEDULE</div>
+        <div class="timeline">
+            <div class="timeline-line" id="timelineLine"></div>
+            <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-day">DAY 1</div></div>
+            <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-time">09:00 AM</div><div class="timeline-desc">Inauguration & Chief Guest Address</div></div>
+            <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-time">10:30 AM</div><div class="timeline-desc">Biz Arena — Round 1</div></div>
+            <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-time">12:00 PM</div><div class="timeline-desc">Risk and Reward</div></div>
+            <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-time">02:00 PM</div><div class="timeline-desc">Lunch Break</div></div>
+            <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-time">03:00 PM</div><div class="timeline-desc">Corporate Casino</div></div>
+            <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-time">05:00 PM</div><div class="timeline-desc">Cultural Evening</div></div>
+            <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-day">DAY 2</div></div>
+            <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-time">09:00 AM</div><div class="timeline-desc">The Dalal Street</div></div>
+            <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-time">11:00 AM</div><div class="timeline-desc">Among Us</div></div>
+            <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-time">01:00 PM</div><div class="timeline-desc">Finals — Biz Arena</div></div>
+            <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-time">03:00 PM</div><div class="timeline-desc">Prize Distribution & Valedictory</div></div>
+        </div>
+    </section>
+
+    <!-- SECTION 6: STATS COUNTER -->
+    <section class="stats-section" id="stats">
+        <div class="stat-block"><div class="stat-number" data-target="61">0</div><div class="stat-label">Participants</div></div>
+        <div class="stat-block"><div class="stat-number" data-target="3">0</div><div class="stat-label">Colleges</div></div>
+        <div class="stat-block"><div class="stat-number" data-target="6">0</div><div class="stat-label">Events</div></div>
+        <div class="stat-block"><div class="stat-number" data-target="60">0</div><div class="stat-label">Volunteers</div></div>
+        <div class="stat-block"><div class="stat-number" data-target="2">0</div><div class="stat-label">Days</div></div>
+    </section>
+
+    <!-- SECTION 7: SPEAKERS -->
+    <section class="speakers-section" id="speakers">
+        <div class="speakers-title">GUESTS<br><span style="color:var(--muted);font-size:0.5em;">& SPEAKERS</span></div>
+        <div class="speakers-grid">
+            <div class="speaker-card">
+                <div class="speaker-card-img"><div class="placeholder-avatar">SK</div></div>
+                <div class="speaker-card-body"><h3>Mr. Sushil Kumar</h3><div class="role">Chief Guest</div><div class="company">JP Morgan Chase</div></div>
+            </div>
+            <div class="speaker-card">
+                <div class="speaker-card-img"><div class="placeholder-avatar">?</div></div>
+                <div class="speaker-card-body"><h3>To Be Announced</h3><div class="role">Keynote Speaker</div><div class="company">—</div></div>
+            </div>
+            <div class="speaker-card">
+                <div class="speaker-card-img"><div class="placeholder-avatar">?</div></div>
+                <div class="speaker-card-body"><h3>To Be Announced</h3><div class="role">Industry Expert</div><div class="company">—</div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 8: GALLERY -->
+    <section class="gallery-section" id="gallery">
+        <div class="gallery-title">GALLERY<br><span style="color:var(--muted);font-size:0.4em;">PREVIOUS EDITIONS</span></div>
+        <div class="gallery-grid">
+            <div class="gallery-item tall"><span class="placeholder-img">Finatex 2024<br>Inauguration</span></div>
+            <div class="gallery-item wide"><span class="placeholder-img">Biz Arena<br>Finalists</span></div>
+            <div class="gallery-item"><span class="placeholder-img">Corporate<br>Casino</span></div>
+            <div class="gallery-item wide"><span class="placeholder-img">Cultural<br>Evening</span></div>
+            <div class="gallery-item"><span class="placeholder-img">Prize<br>Distribution</span></div>
+            <div class="gallery-item tall"><span class="placeholder-img">Group<br>Photo</span></div>
+            <div class="gallery-item"><span class="placeholder-img">Risk &<br>Reward</span></div>
+            <div class="gallery-item wide"><span class="placeholder-img">Dalal<br>Street</span></div>
+        </div>
+    </section>
+
+    <!-- SECTION 9: REGISTRATION CTA -->
+    <section class="cta-section" id="cta">
+        <div class="cta-title">READY TO<br>COMPETE?</div>
+        <p class="cta-subtitle">Register your team for Finatex '26 and prove your financial prowess.</p>
+        <div class="cta-countdown mono">Registrations closing soon</div>
+        <div class="cta-buttons">
+            <a href="#" class="btn btn-primary" style="font-size:1.1rem;padding:18px 48px;">Register Now</a>
+        </div>
+    </section>
+
+    <!-- SECTION 10: FOOTER -->
+    <footer>
+        <svg class="finatex-signature" viewBox="0 0 200 50">
+            <path class="signature-path" id="signaturePath"
+            d="M10,35 Q30,5 50,30 T90,28 T130,32 T170,28 T190,30"
+            stroke="#D4AF37" stroke-width="3" fill="none" stroke-linecap="round"/>
+        </svg>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <a href="#about">About</a>
+                <a href="#events">Events</a>
+                <a href="#schedule">Schedule</a>
+                <a href="#speakers">Speakers</a>
+            </div>
+            <div class="footer-col">
+                <h4>More</h4>
+                <a href="#gallery">Gallery</a>
+                <a href="#cta">Register</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="footer-col">
+                <h4>Social</h4>
+                <a href="#">Instagram</a>
+                <a href="#">LinkedIn</a>
+                <a href="#">Twitter</a>
+            </div>
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <a href="#">finatex@christuniversity.in</a>
+                <a href="#">CHRIST Lavasa Campus</a>
+                <a href="#">Pune, Maharashtra</a>
+            </div>
+        </div>
+        <div class="footer-bottom">© 2026 Finatex — CHRIST (Deemed to be University), Pune Lavasa Campus<br>"The Hub of Analytics"</div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js">
+    </script>
+
+    <script>
+        (function() {
+            // ============================
+            // CUSTOM CURSOR
+            // ============================
+            const cursor = document.getElementById('cursor');
+            const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+            if (!isMobile) {
+                document.addEventListener('mousemove', (e) => {
+                    cursor.style.left = e.clientX + 'px';
+                    cursor.style.top = e.clientY + 'px';
+                });
+
+                const hoverTargets = document.querySelectorAll(
+                    'a, button, .btn, .event-card, .speaker-card, .gallery-item, .coin-container');
+                hoverTargets.forEach(el => {
+                    el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+                    el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+                });
+            }
+
+            // ============================
+            // PRELOADER
+            // ============================
+            const preloaderTL = gsap.timeline({
+                onComplete: () => {
+                    gsap.to('#preloader', {
+                        opacity: 0,
+                        duration: 0.5,
+                        onComplete: () => {
+                            const preloader = document.getElementById('preloader');
+                            if (preloader) preloader.remove();
+                        }
+                    });
+                }
+            });
+
+            preloaderTL.from('.preloader-letter', {
+                y: '100%',
+                opacity: 0,
+                duration: 0.7,
+                stagger: 0.06,
+                ease: 'power4.out'
+            }).from('.preloader-year', {
+                x: 50,
+                opacity: 0,
+                duration: 0.5,
+                ease: 'power2.out'
+            }, '-=0.3');
+
+            // ============================
+            // LENIS SMOOTH SCROLL
+            // ============================
+            const lenis = new Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                smooth: true,
+            });
+
+            function raf(time) {
+                lenis.raf(time);
+                requestAnimationFrame(raf);
+            }
+            requestAnimationFrame(raf);
+
+            // Connect GSAP ScrollTrigger to Lenis
+            gsap.ticker.add((time) => {
+                lenis.raf(time * 1000);
+            });
+            gsap.ticker.lagSmoothing(0);
+
+            // ============================
+            // NAVIGATION
+            // ============================
+            const nav = document.getElementById('nav');
+            const hamburger = document.getElementById('hamburger');
+            const navLinks = document.getElementById('navLinks');
+
+            ScrollTrigger.create({
+                start: 'top -100',
+                onUpdate: (self) => {
+                    if (self.scroll() > 80) {
+                        nav.classList.add('nav-solid');
+                    } else {
+                        nav.classList.remove('nav-solid');
+                    }
+                }
+            });
+
+            hamburger.addEventListener('click', () => {
+                navLinks.classList.toggle('open');
+                hamburger.textContent = navLinks.classList.contains('open') ? '✕' : '☰';
+            });
+
+            // Smooth scroll for nav links
+            document.querySelectorAll('[data-link]').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const target = document.querySelector(link.getAttribute('href'));
+                    if (target) {
+                        navLinks.classList.remove('open');
+                        hamburger.textContent = '☰';
+                        lenis.scrollTo(target, { offset: -80 });
+                    }
+                });
+            });
+
+            // ============================
+            // HERO — 3D COIN ROTATION
+            // ============================
+            gsap.to('#coin', {
+                scrollTrigger: {
+                    trigger: '#hero',
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: 1,
+                },
+                rotateY: 720,
+                scale: 1.4,
+                ease: 'none'
+            });
+
+            // ============================
+            // ABOUT — WORD-BY-WORD REVEAL
+            // ============================
+            gsap.from('.manifesto-word', {
+                scrollTrigger: {
+                    trigger: '#manifesto',
+                    start: 'top 80%',
+                    end: 'top 30%',
+                    scrub: 1,
+                },
+                opacity: 0.15,
+                stagger: 0.08,
+            });
+
+            // Parallax image
+            gsap.to('#parallaxImage', {
+                scrollTrigger: {
+                    trigger: '#about',
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: 1,
+                },
+                y: -60,
+                ease: 'none',
+            });
+
+            // ============================
+            // EVENTS — HORIZONTAL SCROLL
+            // ============================
+            const eventsTrack = document.getElementById('eventsTrack');
+            const eventsSection = document.getElementById('events');
+
+            if (eventsTrack && eventsTrack.scrollWidth > window.innerWidth) {
+                gsap.to(eventsTrack, {
+                    scrollTrigger: {
+                        trigger: eventsSection,
+                        start: 'top top',
+                        end: () => `+=${eventsTrack.scrollWidth - window.innerWidth + 200}`,
+                        scrub: 1,
+                        pin: true,
+                        anticipatePin: 1,
+                    },
+                    x: () => -(eventsTrack.scrollWidth - window.innerWidth + 48),
+                    ease: 'none',
+                });
+            }
+
+            // ============================
+            // TROPHY ASSEMBLY
+            // ============================
+            const trophyPieces = ['#trophyBase', '#trophyStem', '#trophyCup', '#trophyHandleL', '#trophyHandleR'];
+
+            ScrollTrigger.create({
+                trigger: '#trophySection',
+                start: 'top 50%',
+                onEnter: () => {
+                    trophyPieces.forEach((sel, i) => {
+                        setTimeout(() => {
+                            document.querySelector(sel)?.classList.add('assembled');
+                        }, i * 180);
+                    });
+                },
+                once: true,
+            });
+
+            // ============================
+            // SCHEDULE — TIMELINE LINE DRAW
+            // ============================
+            gsap.from('#timelineLine', {
+                scrollTrigger: {
+                    trigger: '#schedule',
+                    start: 'top 70%',
+                    end: 'bottom 20%',
+                    scrub: 1,
+                },
+                scaleY: 0,
+                transformOrigin: 'top center',
+                ease: 'none',
+            });
+
+            gsap.from('.timeline-dot', {
+                scrollTrigger: {
+                    trigger: '#schedule',
+                    start: 'top 70%',
+                    end: 'bottom 20%',
+                    scrub: 1,
+                },
+                scale: 0,
+                stagger: 0.05,
+                ease: 'back.out(2)',
+            });
+
+            // ============================
+            // STATS — COUNTER ANIMATION
+            // ============================
+            function animateCounter(el, target) {
+                const obj = { val: 0 };
+                gsap.to(obj, {
+                    val: target,
+                    duration: 2,
+                    ease: 'power2.out',
+                    onUpdate: () => {
+                        el.textContent = Math.round(obj.val) + '+';
+                    },
+                });
+            }
+
+            ScrollTrigger.create({
+                trigger: '#stats',
+                start: 'top 60%',
+                onEnter: () => {
+                    document.querySelectorAll('.stat-number').forEach(el => {
+                        animateCounter(el, parseInt(el.dataset.target));
+                    });
+                },
+                once: true,
+            });
+
+            // ============================
+            // GALLERY — PARALLAX IMAGES
+            // ============================
+            gsap.utils.toArray('.gallery-item').forEach(item => {
+                gsap.to(item, {
+                    scrollTrigger: {
+                        trigger: item,
+                        start: 'top bottom',
+                        end: 'bottom top',
+                        scrub: 1,
+                    },
+                    y: -30,
+                    ease: 'none',
+                });
+            });
+
+            // ============================
+            // FOOTER — SVG SIGNATURE DRAW
+            // ============================
+            ScrollTrigger.create({
+                trigger: 'footer',
+                start: 'top 80%',
+                onEnter: () => {
+                    document.getElementById('signaturePath')?.classList.add('animate');
+                },
+                once: true,
+            });
+
+            // ============================
+            // INIT
+            // ============================
+            // Refresh ScrollTrigger after everything is set up
+            ScrollTrigger.refresh();
+
+            console.log('%c🏆 Finatex \'26 %c— The Hub of Analytics',
+                'color:#D4AF37;font-size:1.5rem;font-weight:bold;',
+                'color:#F5F0E8;');
+            console.log('%cBuilt with GSAP + ScrollTrigger + Lenis',
+                'color:#6B7280;font-style:italic;');
+            console.log('%cCHRIST (Deemed to be University), Pune Lavasa Campus',
+                'color:#00E5FF;');
+
+        })();
+    </script>
 </body>
 </html>
