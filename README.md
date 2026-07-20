@@ -37,5 +37,3 @@ This project is built using the following open-source software:
 - **Marked** — MIT — Markdown parsing
 - **QRCode.js** — MIT — QR code generation
 - **Pako** — MIT — zlib port
-
-
