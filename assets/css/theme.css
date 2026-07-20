@@ -1,0 +1,138 @@
+/* Handy Toolx — shared theme + component styles, loaded on every page
+   after the page's own inline <style> so the dark-mode variables can
+   win the cascade. */
+
+html[data-theme="dark"] {
+  --bg: #17161a;
+  --ink: #ece7da;
+  --ink2: #bdb6a4;
+  --ink3: #8b8474;
+  --rust: #e0644c;
+  --rust-soft: rgba(224, 100, 76, .14);
+  --paper: #211f22;
+  --grid: repeating-linear-gradient(0deg, transparent, transparent 47px, rgba(255, 255, 255, .05) 47px, rgba(255, 255, 255, .05) 48px),
+          repeating-linear-gradient(90deg, transparent, transparent 47px, rgba(255, 255, 255, .05) 47px, rgba(255, 255, 255, .05) 48px);
+}
+html[data-theme="dark"] body { color-scheme: dark; }
+html[data-theme="dark"] .github-icon path { fill: var(--ink); }
+html[data-theme="dark"] .preview-box { background: #0f0e11; color: #ece7da; }
+html[data-theme="dark"] #qrBox,
+html[data-theme="dark"] .qr-canvas-wrap { background: #fff; }
+html[data-theme="dark"] .card:hover,
+html[data-theme="dark"] .app { box-shadow: none; }
+
+/* Theme toggle button */
+.theme-toggle {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-family: var(--mono); font-size: .6rem; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ink); border: 2px solid var(--ink); background: var(--paper);
+  padding: .3rem .7rem; cursor: pointer; transition: background .15s, color .15s;
+}
+.theme-toggle:hover { background: var(--ink); color: var(--paper); }
+.theme-toggle .icon { width: 13px; height: 13px; display: block; flex-shrink: 0; }
+.theme-toggle .icon-sun { display: none; }
+html[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+html[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+
+/* Accumulating file-picker chips */
+.ht-file-chips { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .5rem; position: relative; }
+.ht-chip {
+  display: inline-flex; align-items: center; gap: .35rem;
+  font-family: var(--mono); font-size: .6rem; color: var(--ink);
+  background: var(--bg); border: 2px solid var(--ink); padding: .2rem .3rem .2rem .55rem;
+  max-width: 220px;
+}
+.ht-chip-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ht-chip-x {
+  font-family: var(--sans); line-height: 1; font-size: .95rem; font-weight: 700;
+  color: var(--ink); background: transparent; border: none; cursor: pointer;
+  padding: 0 .15rem; transition: color .15s;
+}
+.ht-chip-x:hover { color: var(--rust); }
+.ht-file-pill {
+  font-family: var(--mono); font-size: .62rem; letter-spacing: .04em; color: var(--ink);
+  background: var(--bg); border: 2px solid var(--ink); padding: .3rem .65rem; cursor: pointer;
+}
+.ht-file-pill:hover { background: var(--rust-soft); }
+.ht-file-pill-clear { border: 2px solid var(--ink); background: var(--bg); }
+.ht-file-dropdown {
+  position: absolute; top: calc(100% + .35rem); left: 0; z-index: 20;
+  background: var(--paper); border: 2px solid var(--ink); min-width: 260px; max-width: 340px;
+  max-height: 260px; overflow-y: auto; box-shadow: 4px 4px 0 0 var(--ink);
+}
+.ht-file-dropdown-row {
+  display: flex; align-items: center; gap: .5rem; padding: .35rem .6rem;
+  border-bottom: 1px solid rgba(128, 128, 128, .25); font-family: var(--mono); font-size: .6rem;
+}
+.ht-file-dropdown-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink); }
+.ht-file-dropdown-size { color: var(--ink3); flex-shrink: 0; }
+.ht-file-dropdown-clear {
+  width: 100%; font-family: var(--mono); font-size: .6rem; text-transform: uppercase; letter-spacing: .08em;
+  padding: .5rem; border: none; background: var(--bg); color: var(--rust); cursor: pointer;
+}
+.ht-file-dropdown-clear:hover { background: var(--rust); color: #fff; }
+
+/* Output "view" / "copy" affordances, used next to download buttons */
+.action.ghost { background: transparent; color: var(--ink); border: 2px dashed var(--ink); }
+.action.ghost:hover { background: var(--bg); }
+.output-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; }
+.file-result {
+  margin-top: .85rem; border: 2px solid var(--ink); background: var(--bg); padding: .6rem .75rem;
+  display: flex; align-items: center; gap: .6rem; flex-wrap: wrap;
+}
+.file-result .fr-name { font-family: var(--mono); font-size: .65rem; flex: 1; min-width: 120px; overflow-wrap: anywhere; }
+.file-result .fr-meta { font-family: var(--mono); font-size: .58rem; color: var(--ink3); }
+.file-result-list { display: flex; flex-direction: column; gap: .5rem; margin-top: .75rem; }
+
+/* Grid items (row2/row3 columns holding textareas, preview boxes, etc.)
+   default to a content-based min-width, so a single long unbroken line
+   (URL, code, base64 blob...) can force the whole two-column layout to
+   stretch past the viewport instead of wrapping/scrolling inside its
+   own box. Constraining min-width lets the intended overflow rules on
+   the children actually take effect. */
+.row2 > div, .row3 > div { min-width: 0; }
+
+/* Markdown preview: keep long unbroken lines / code blocks contained
+   and scrollable instead of blowing out the layout, and let the block
+   grow with content rather than clipping awkwardly. */
+.preview-box {
+  min-height: 120px;
+  height: auto;
+  max-height: 65vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.preview-box * { max-width: 100%; }
+.preview-box img { height: auto; }
+.preview-box pre {
+  overflow-x: auto;
+  white-space: pre;
+  background: rgba(128, 128, 128, .12);
+  padding: .6rem .75rem;
+  border-radius: 3px;
+}
+.preview-box pre code { white-space: pre; overflow-wrap: normal; word-break: normal; }
+.preview-box code {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  background: rgba(128, 128, 128, .15);
+  padding: .1em .3em;
+  border-radius: 3px;
+}
+.preview-box table { display: block; overflow-x: auto; border-collapse: collapse; }
+.preview-box th, .preview-box td { border: 1px solid rgba(128, 128, 128, .35); padding: .3rem .5rem; }
+
+/* QR scan */
+.qr-scan-drop {
+  margin-top: .75rem; border: 2px dashed var(--ink); padding: 1.25rem; text-align: center;
+  font-family: var(--mono); font-size: .65rem; color: var(--ink2); cursor: pointer; background: var(--bg);
+}
+.qr-scan-drop:hover { background: var(--rust-soft); }
+.qr-scan-drop.drag { background: var(--rust-soft); border-color: var(--rust); }
+.qr-scan-preview { max-width: 260px; margin-top: .75rem; border: 2px solid var(--ink); display: none; }
+.qr-result-box {
+  margin-top: .75rem; border: 2px solid var(--ink); background: var(--bg); padding: .6rem .8rem;
+  font-family: var(--mono); font-size: .7rem; word-break: break-word; display: none;
+}
