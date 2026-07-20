@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PDF — Handy Toolx</title>
+    <script src="../assets/js/theme.js"></script>
+    <style>
+        :root{--bg:#F0EAE0;--ink:#1a1a1a;--ink2:#4f4b44;--ink3:#6f6a5f;--rust:#B5392A;--rust-soft:rgba(181,57,42,.08);--paper:#FBF8F2;--mono:'IBM Plex Mono','SF Mono',monospace;--sans:'Archivo',system-ui,sans-serif;--grid:repeating-linear-gradient(0deg,transparent,transparent 47px,rgba(26,26,26,.06)47px,rgba(26,26,26,.06)48px),repeating-linear-gradient(90deg,transparent,transparent 47px,rgba(26,26,26,.06)47px,rgba(26,26,26,.06)48px);--sidebar:200px}
+        @font-face{font-family:Archivo;src:url(../assets/fonts/archivo-variable.woff2)format('woff2');font-weight:400 900;font-display:swap}
+        @font-face{font-family:'IBM Plex Mono';src:url(../assets/fonts/ibm-plex-mono-variable.woff2)format('woff2');font-weight:400 700;font-display:swap}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{background:var(--bg);background-image:var(--grid);font-family:var(--sans);color:var(--ink);padding:1.5rem;min-height:100vh}
+        a{color:var(--rust)}
+        .app{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:var(--sidebar) 1fr;gap:2rem;background:var(--paper);border:2px solid var(--ink);padding:1.5rem;min-height:80vh}
+        .sidebar{border-right:2px solid var(--ink);padding-right:1.5rem;display:flex;flex-direction:column}
+        .sidebar-header{display:flex;flex-direction:column;gap:.2rem;padding-bottom:1rem;border-bottom:2px solid var(--ink);margin-bottom:1rem}
+        .sidebar-brand{font-family:var(--mono);font-weight:600;font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;color:var(--rust)}
+        .sidebar-title{font-weight:800;font-size:1.2rem;letter-spacing:-.025em}
+        .sidebar-back{font-family:var(--mono);font-size:.55rem;text-transform:uppercase;letter-spacing:.18em;color:var(--ink3);margin-top:.2rem}
+        .sidebar-back:hover{color:var(--rust);text-decoration:none}
+        .sidebar-nav{display:flex;flex-direction:column;gap:.1rem;flex:1}
+        .sidebar-nav .tool-btn{font-family:var(--mono);font-size:.65rem;text-align:left;padding:.4rem .7rem;border:none;border-left:3px solid transparent;background:transparent;color:var(--ink2);cursor:pointer;transition:background .15s,border-color .15s;letter-spacing:.02em}
+        .sidebar-nav .tool-btn:hover{background:var(--bg);color:var(--ink)}
+        .sidebar-nav .tool-btn.active{border-left-color:var(--rust);background:var(--rust-soft);color:var(--ink);font-weight:600}
+        .main{display:flex;flex-direction:column;min-width:0}
+        .main-header{padding-bottom:.75rem;border-bottom:2px solid var(--ink);margin-bottom:1.25rem}
+        .main-header h2{font-weight:800;font-size:1.4rem;letter-spacing:-.025em}
+        .main-header .desc{font-family:var(--mono);font-size:.65rem;color:var(--ink3);margin-top:.1rem;letter-spacing:.05em}
+        .tool-panel{display:none;animation:fadeIn .25s cubic-bezier(.16,1,.3,1)}
+        .tool-panel.active{display:block}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+        .tool-panel label{font-family:var(--mono);font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;display:block;margin-top:.9rem;margin-bottom:.2rem;color:var(--ink2)}
+        .tool-panel label:first-of-type{margin-top:0}
+        .tool-panel input[type=file],.tool-panel input[type=text],.tool-panel input[type=number],.tool-panel select{width:100%;background:var(--paper);border:2px solid var(--ink);padding:.4rem .6rem;font-family:var(--mono);font-size:.7rem;color:var(--ink)}
+        .tool-panel input[type=file]{padding:.4rem;cursor:pointer}
+        .tool-panel input[type=file]::file-selector-button{font-family:var(--mono);font-size:.6rem;padding:.25rem .75rem;border:2px solid var(--ink);background:var(--bg);color:var(--ink);cursor:pointer;margin-right:.75rem;transition:background .15s}
+        .tool-panel input[type=file]::file-selector-button:hover{background:var(--ink);color:var(--paper)}
+        .tool-panel .action{margin-top:1.2rem;font-family:var(--mono);font-weight:600;font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;padding:.45rem 1.2rem;border:2px solid var(--ink);background:var(--rust);color:#fff;cursor:pointer;transition:background .2s}
+        .tool-panel .action:hover{background:var(--ink);color:#fff}
+        .status{font-size:.65rem;font-family:var(--mono);color:var(--ink2);margin-top:.6rem;min-height:1.2rem}
+        .perm-grid{display:grid;grid-template-columns:1fr 1fr;gap:.4rem .8rem;margin-top:.4rem}
+        .perm-check{display:flex;align-items:center;gap:.4rem;font-family:var(--mono);font-size:.65rem;color:var(--ink);text-transform:none;letter-spacing:0;cursor:pointer}
+        .perm-check input{width:auto;margin:0}
+        .fine-note{font-family:var(--mono);font-size:.58rem;color:var(--ink3);margin-top:.75rem;line-height:1.5}
+        .meta-table{width:100%;border-collapse:collapse;margin-top:.75rem;font-family:var(--mono);font-size:.65rem}
+        .meta-table tr{border-bottom:1px solid rgba(128,128,128,.25)}
+        .meta-table td{padding:.35rem .5rem;vertical-align:top}
+        .meta-table td:first-child{color:var(--ink3);white-space:nowrap;width:1%}
+        .meta-table td:last-child{color:var(--ink);overflow-wrap:anywhere}
+        .status.err{color:#b5392a}
+        .status.ok{color:#2b6e3b}
+        pre.out{background:var(--bg);border:2px solid var(--ink);padding:.6rem .9rem;font-family:var(--mono);font-size:.65rem;white-space:pre-wrap;word-break:break-all;max-height:280px;overflow:auto;margin-top:.6rem}
+        @media(max-width:768px){.app{grid-template-columns:1fr;padding:1rem;gap:1rem}.sidebar{border-right:none;border-bottom:2px solid var(--ink);padding-right:0;padding-bottom:.75rem}.sidebar-nav{flex-direction:row;flex-wrap:wrap;gap:.1rem}.sidebar-nav .tool-btn{border-left:none;border-bottom:3px solid transparent;padding:.3rem .5rem;font-size:.6rem}.sidebar-nav .tool-btn.active{border-left:none;border-bottom-color:var(--rust)}body{padding:.75rem}.perm-grid{grid-template-columns:1fr}}
+        .sidebar-header-row{display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem}
+        body{transition:background-color .2s,color .2s}
+    </style>
+    <link rel="stylesheet" href="../assets/css/theme.css">
+</head>
+<body>
+<div class="app">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-header-row">
+                <span class="sidebar-brand">Zn4AoZ</span>
+                <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false" title="Switch to dark mode" aria-label="Toggle dark mode">
+                    <svg class="icon icon-moon" viewBox="0 0 16 16" fill="currentColor"><path d="M14 8.6A6.4 6.4 0 0 1 6.9 2 6.6 6.6 0 1 0 14 8.6z"/></svg>
+                    <svg class="icon icon-sun" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="3.3"/><path d="M8 0v2M8 14v2M16 8h-2M2 8H0M13.66 2.34l-1.42 1.42M3.76 12.24l-1.42 1.42M13.66 13.66l-1.42-1.42M3.76 3.76 2.34 2.34" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                </button>
+            </div>
+            <span class="sidebar-title">PDF Tools</span>
+            <a class="sidebar-back" href="../index.html">← menu</a>
+        </div>
+        <nav class="sidebar-nav" id="sidebar">
+            <button class="tool-btn active" data-tool="merge">Merge</button>
+            <button class="tool-btn" data-tool="split">Split</button>
+            <button class="tool-btn" data-tool="delete">Delete pages</button>
+            <button class="tool-btn" data-tool="extract">Extract pages</button>
+            <button class="tool-btn" data-tool="rotate">Rotate</button>
+            <button class="tool-btn" data-tool="info">Info &amp; metadata</button>
+            <button class="tool-btn" data-tool="stripmeta">Remove metadata</button>
+            <button class="tool-btn" data-tool="encrypt">Add password</button>
+            <button class="tool-btn" data-tool="decrypt">Remove password</button>
+            <button class="tool-btn" data-tool="text">Extract text</button>
+        </nav>
+    </aside>
+
+    <main class="main">
+        <div class="tool-panel active" id="panel-merge">
+            <div class="main-header"><h2>Merge</h2><div class="desc">Pick PDFs one at a time or several at once — click "Choose Files" again to add more. Merged in the order they were added.</div></div>
+            <label>PDF files</label>
+            <input type="file" id="mergeFiles" accept=".pdf" multiple>
+            <button class="action" onclick="doMerge()">Merge</button>
+            <div class="status" id="mergeStatus"></div>
+            <div id="mergeResult" style="display:none;"></div>
+        </div>
+
+        <div class="tool-panel" id="panel-split">
+            <div class="main-header"><h2>Split</h2><div class="desc">Splits every page into its own PDF, delivered as a ZIP.</div></div>
+            <label>PDF file</label>
+            <input type="file" id="splitFile" accept=".pdf">
+            <button class="action" onclick="doSplit()">Split &amp; download ZIP</button>
+            <div class="status" id="splitStatus"></div>
+            <div id="splitResult" style="display:none;"></div>
+        </div>
+
+        <div class="tool-panel" id="panel-delete">
+            <div class="main-header"><h2>Delete pages</h2><div class="desc">Remove specific pages by number.</div></div>
+            <label>PDF file</label>
+            <input type="file" id="deleteFile" accept=".pdf">
+            <label>Pages to delete</label>
+            <input type="text" id="deletePages" placeholder="e.g. 1,3,5">
+            <button class="action" onclick="doDelete()">Delete pages</button>
+            <div class="status" id="deleteStatus"></div>
+            <div id="deleteResult" style="display:none;"></div>
+        </div>
+
+        <div class="tool-panel" id="panel-extract">
+            <div class="main-header"><h2>Extract pages</h2><div class="desc">Pull specific pages into a new PDF.</div></div>
+            <label>PDF file</label>
+            <input type="file" id="extractFile" accept=".pdf">
+            <label>Pages to extract</label>
+            <input type="text" id="extractPages" placeholder="e.g. 1,3,5">
+            <button class="action" onclick="doExtract()">Extract pages</button>
+            <div class="status" id="extractStatus"></div>
+            <div id="extractResult" style="display:none;"></div>
+        </div>
+
+        <div class="tool-panel" id="panel-rotate">
+            <div class="main-header"><h2>Rotate</h2><div class="desc">Rotate all pages, or a specific set.</div></div>
+            <label>PDF file</label>
+            <input type="file" id="rotateFile" accept=".pdf">
+            <label>Pages (blank = all)</label>
+            <input type="text" id="rotatePages" placeholder="e.g. 1,2">
+            <label>Angle</label>
+            <select id="rotateAngle"><option value="90">90°</option><option value="180">180°</option><option value="270">270°</option></select>
+            <button class="action" onclick="doRotate()">Rotate</button>
+            <div class="status" id="rotateStatus"></div>
+            <div id="rotateResult" style="display:none;"></div>
+        </div>
+
+        <div class="tool-panel" id="panel-info">
+            <div class="main-header"><h2>Info &amp; metadata</h2><div class="desc">Page count, encryption status, and the document's Title/Author/Producer/dates.</div></div>
+            <label>PDF file</label>
+            <input type="file" id="infoFile" accept=".pdf">
+            <button class="action" onclick="doInfo()">Get info</button>
+            <div id="infoOut" style="display:none;"></div>
+            <div class="status" id="infoStatus"></div>
+        </div>
+
+        <div class="tool-panel" id="panel-stripmeta">
+            <div class="main-header"><h2>Remove metadata</h2><div class="desc">Strips Title, Author, Subject, Keywords, Producer/Creator, and creation/modification dates. Also unlinks any embedded XMP metadata.</div></div>
+            <label>PDF file</label>
+            <input type="file" id="stripmetaFile" accept=".pdf">
+            <button class="action" onclick="doStripMeta()">Remove metadata</button>
+            <div class="status" id="stripmetaStatus"></div>
+            <div id="stripmetaResult" style="display:none;"></div>
+        </div>
+
+        <div class="tool-panel" id="panel-encrypt">
+            <div class="main-header"><h2>Add password</h2><div class="desc">Password-protects a PDF using the classic RC4 standard security handler (40/128-bit) — supported by essentially every PDF reader.</div></div>
+            <label>PDF file</label>
+            <input type="file" id="encryptFile" accept=".pdf">
+            <div class="row">
+                <div><label>Password to open (required)</label><input type="password" id="encryptUserPw" placeholder="Open password"></div>
+                <div><label>Owner password (optional — defaults to the same)</label><input type="password" id="encryptOwnerPw" placeholder="Permissions password"></div>
+            </div>
+            <label>Encryption strength</label>
+            <select id="encryptStrength">
+                <option value="128">128-bit RC4 (recommended)</option>
+                <option value="40">40-bit RC4 (maximum compatibility with very old readers)</option>
+            </select>
+            <label>Permissions (once opened)</label>
+            <div class="perm-grid">
+                <label class="perm-check"><input type="checkbox" id="permPrint" checked> Allow printing</label>
+                <label class="perm-check"><input type="checkbox" id="permCopy" checked> Allow copying text</label>
+                <label class="perm-check"><input type="checkbox" id="permModify" checked> Allow editing</label>
+                <label class="perm-check"><input type="checkbox" id="permAnnotate" checked> Allow annotations</label>
+            </div>
+            <button class="action" onclick="doEncrypt()">Encrypt &amp; download</button>
+            <div class="status" id="encryptStatus"></div>
+            <div id="encryptResult" style="display:none;"></div>
+            <p class="fine-note">Note: this is the widely-compatible RC4 scheme, not AES — solid for keeping casual access out, not for highly sensitive documents.</p>
+        </div>
+
+        <div class="tool-panel" id="panel-decrypt">
+            <div class="main-header"><h2>Remove password</h2><div class="desc">Removes password protection from an RC4-encrypted PDF (40/128-bit standard security handler) given the open or permissions password.</div></div>
+            <label>PDF file</label>
+            <input type="file" id="decryptFile" accept=".pdf">
+            <label>Password</label>
+            <input type="password" id="decryptPw" placeholder="Open or owner password">
+            <button class="action" onclick="doDecrypt()">Remove password &amp; download</button>
+            <div class="status" id="decryptStatus"></div>
+            <div id="decryptResult" style="display:none;"></div>
+            <p class="fine-note">Note: AES-encrypted PDFs (common from recent Acrobat versions) and PDFs using compressed cross-reference streams aren't supported yet — you'll get a clear error rather than a broken file.</p>
+        </div>
+
+        <div class="tool-panel" id="panel-text">
+            <div class="main-header"><h2>Extract text</h2><div class="desc">Pull all readable text out of a PDF into a .txt file.</div></div>
+            <label>PDF file</label>
+            <input type="file" id="textFile" accept=".pdf">
+            <button class="action" onclick="doText()">Extract &amp; download .txt</button>
+            <div class="status" id="textStatus"></div>
+            <div id="textResult" style="display:none;"></div>
+        </div>
+    </main>
+</div>
+
+<script src="../assets/js/pdf-lib.min.js"></script>
+<script src="../assets/js/pdf.min.js"></script>
+<script src="../assets/js/jszip.min.js"></script>
+<script src="../assets/js/common.js"></script>
+<script src="../assets/js/filepicker.js"></script>
+<script src="../assets/js/pdfcrypto.js"></script>
+<script>
+document.getElementById("sidebar").addEventListener("click", e => {
+  const btn = e.target.closest(".tool-btn");
+  if (!btn) return;
+  document.querySelectorAll(".tool-btn").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll(".tool-panel").forEach(p => p.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById("panel-" + btn.dataset.tool).classList.add("active");
+  try { sessionStorage.setItem("handytoolx-pdf-tab", btn.dataset.tool); } catch (e) {}
+});
+(function restoreTab(){
+  let last; try { last = sessionStorage.getItem("handytoolx-pdf-tab"); } catch (e) {}
+  if (!last) return;
+  const btn = document.querySelector('.tool-btn[data-tool="' + last + '"]');
+  if (btn) btn.click();
+})();
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = "../assets/js/pdf.worker.min.js";
+const { PDFDocument, degrees } = PDFLib;
+
+const setStatus = HandyToolx.setStatus;
+const downloadBlob = HandyToolx.downloadBlob;
+function download(bytes, filename, mime){
+  downloadBlob(new Blob([bytes], {type: mime || "application/pdf"}), filename);
+}
+function parsePages(str){
+  return str.split(",").map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n));
+}
+// Strip pdf-lib's own "pdf-lib (https://github.com/Hopding/pdf-lib)"
+// producer/creator branding that would otherwise get written into
+// every output file, and skip pdf-lib's automatic metadata injection.
+function unbrandedSave(doc, extraOpts){
+  doc.setProducer("");
+  doc.setCreator("");
+  return doc.save(Object.assign({ updateMetadata: false }, extraOpts || {}));
+}
+
+const mergePicker = HandyToolxFilePicker.attach(document.getElementById("mergeFiles"));
+["splitFile","deleteFile","extractFile","rotateFile","infoFile","textFile","stripmetaFile","encryptFile","decryptFile"].forEach(id => {
+  HandyToolxFilePicker.attach(document.getElementById(id));
+});
+
+// Reconstructs readable text from pdf.js text items using their actual
+// position on the page, instead of naively joining every fragment with
+// a single space (which loses line breaks and glues words together).
+function reconstructPageText(items){
+  const lines = [];
+  let currentLine = [];
+  let lastY = null, lastRight = null;
+
+  for (const item of items){
+    if (!item.str){
+      if (item.hasEOL && currentLine.length){ lines.push(currentLine.join("")); currentLine = []; lastY = null; lastRight = null; }
+      continue;
+    }
+    const y = item.transform[5];
+    const x = item.transform[4];
+    const height = item.height || Math.abs(item.transform[3]) || 10;
+    const sameLine = lastY !== null && Math.abs(y - lastY) < height * 0.4;
+
+    if (!sameLine && currentLine.length){
+      lines.push(currentLine.join(""));
+      currentLine = [];
+    }
+    if (sameLine && lastRight !== null){
+      const gap = x - lastRight;
+      const avgCharWidth = (item.width && item.str.length) ? item.width / item.str.length : height * 0.4;
+      if (gap > avgCharWidth * 0.35) currentLine.push(" ");
+    }
+    currentLine.push(item.str);
+    lastY = y;
+    lastRight = x + (item.width || 0);
+
+    if (item.hasEOL){
+      lines.push(currentLine.join(""));
+      currentLine = [];
+      lastY = null; lastRight = null;
+    }
+  }
+  if (currentLine.length) lines.push(currentLine.join(""));
+  return lines.join("\n").replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+}
+
+async function doMerge(){
+  const files = mergePicker.getFiles();
+  if (files.length < 2) return setStatus("mergeStatus", "Pick at least 2 PDFs.", "err");
+  try{
+    const out = await PDFDocument.create();
+    for (const file of files){
+      const bytes = await file.arrayBuffer();
+      const src = await PDFDocument.load(bytes);
+      const pages = await out.copyPages(src, src.getPageIndices());
+      pages.forEach(p => out.addPage(p));
+    }
+    const blob = new Blob([await unbrandedSave(out)], {type: "application/pdf"});
+    downloadBlob(blob, "merged.pdf");
+    HandyToolx.addFileResult("mergeResult", blob, "merged.pdf");
+    setStatus("mergeStatus", `Merged ${files.length} files.`, "ok");
+  }catch(e){ setStatus("mergeStatus", "Error: " + e.message, "err"); }
+}
+
+async function doSplit(){
+  const file = document.getElementById("splitFile").files[0];
+  if (!file) return setStatus("splitStatus", "Pick a PDF.", "err");
+  try{
+    const bytes = await file.arrayBuffer();
+    const src = await PDFDocument.load(bytes);
+    const zip = new JSZip();
+    const total = src.getPageCount();
+    const stem = file.name.replace(/\.pdf$/i, "");
+    for (let i = 0; i < total; i++){
+      const out = await PDFDocument.create();
+      const [page] = await out.copyPages(src, [i]);
+      out.addPage(page);
+      zip.file(`${stem}_page_${i+1}.pdf`, await unbrandedSave(out));
+    }
+    const zipBlob = await zip.generateAsync({type: "blob"});
+    downloadBlob(zipBlob, `${stem}_split.zip`);
+    HandyToolx.addFileResult("splitResult", zipBlob, `${stem}_split.zip`);
+    setStatus("splitStatus", `Split into ${total} pages.`, "ok");
+  }catch(e){ setStatus("splitStatus", "Error: " + e.message, "err"); }
+}
+
+async function doDelete(){
+  const file = document.getElementById("deleteFile").files[0];
+  const pages = parsePages(document.getElementById("deletePages").value);
+  if (!file || pages.length === 0) return setStatus("deleteStatus", "Pick a PDF and page numbers.", "err");
+  try{
+    const bytes = await file.arrayBuffer();
+    const doc = await PDFDocument.load(bytes);
+    const total = doc.getPageCount();
+    const toDelete = new Set(pages.map(p => p - 1));
+    for (const idx of [...toDelete].sort((a,b)=>b-a)){
+      if (idx < 0 || idx >= total) return setStatus("deleteStatus", `Page ${idx+1} out of range (1-${total}).`, "err");
+      doc.removePage(idx);
+    }
+    const blob = new Blob([await unbrandedSave(doc)], {type: "application/pdf"});
+    downloadBlob(blob, "deleted_pages.pdf");
+    HandyToolx.addFileResult("deleteResult", blob, "deleted_pages.pdf");
+    setStatus("deleteStatus", `Deleted ${pages.length} page(s).`, "ok");
+  }catch(e){ setStatus("deleteStatus", "Error: " + e.message, "err"); }
+}
+
+async function doExtract(){
+  const file = document.getElementById("extractFile").files[0];
+  const pages = parsePages(document.getElementById("extractPages").value);
+  if (!file || pages.length === 0) return setStatus("extractStatus", "Pick a PDF and page numbers.", "err");
+  try{
+    const bytes = await file.arrayBuffer();
+    const src = await PDFDocument.load(bytes);
+    const total = src.getPageCount();
+    for (const p of pages) if (p < 1 || p > total) return setStatus("extractStatus", `Page ${p} out of range (1-${total}).`, "err");
+    const out = await PDFDocument.create();
+    const copied = await out.copyPages(src, pages.map(p => p - 1));
+    copied.forEach(p => out.addPage(p));
+    const blob = new Blob([await unbrandedSave(out)], {type: "application/pdf"});
+    downloadBlob(blob, "extracted.pdf");
+    HandyToolx.addFileResult("extractResult", blob, "extracted.pdf");
+    setStatus("extractStatus", `Extracted ${pages.length} page(s).`, "ok");
+  }catch(e){ setStatus("extractStatus", "Error: " + e.message, "err"); }
+}
+
+async function doRotate(){
+  const file = document.getElementById("rotateFile").files[0];
+  const angle = parseInt(document.getElementById("rotateAngle").value, 10);
+  const pagesStr = document.getElementById("rotatePages").value.trim();
+  if (!file) return setStatus("rotateStatus", "Pick a PDF.", "err");
+  try{
+    const bytes = await file.arrayBuffer();
+    const doc = await PDFDocument.load(bytes);
+    const total = doc.getPageCount();
+    const pages = pagesStr ? parsePages(pagesStr) : Array.from({length: total}, (_, i) => i + 1);
+    for (const p of pages){
+      if (p < 1 || p > total) return setStatus("rotateStatus", `Page ${p} out of range (1-${total}).`, "err");
+      const page = doc.getPage(p - 1);
+      page.setRotation(degrees((page.getRotation().angle + angle) % 360));
+    }
+    const blob = new Blob([await unbrandedSave(doc)], {type: "application/pdf"});
+    downloadBlob(blob, "rotated.pdf");
+    HandyToolx.addFileResult("rotateResult", blob, "rotated.pdf");
+    setStatus("rotateStatus", `Rotated ${pages.length} page(s) by ${angle}°.`, "ok");
+  }catch(e){ setStatus("rotateStatus", "Error: " + e.message, "err"); }
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function metaRow(label, value){
+  return `<tr><td>${escapeHtml(label)}</td><td>${value === null || value === undefined || value === "" ? "<em>—</em>" : escapeHtml(value)}</td></tr>`;
+}
+async function doInfo(){
+  const file = document.getElementById("infoFile").files[0];
+  if (!file) return setStatus("infoStatus", "Pick a PDF.", "err");
+  const out = document.getElementById("infoOut");
+  try{
+    const bytes = await file.arrayBuffer();
+    const doc = await PDFDocument.load(bytes, { ignoreEncryption: true, updateMetadata: false });
+    const fmtDate = d => { try { return d ? new Date(d).toLocaleString() : null; } catch(e){ return null; } };
+    const rows = [
+      metaRow("Filename", file.name),
+      metaRow("File size", HandyToolx.fmtSize(file.size)),
+      metaRow("Pages", doc.getPageCount()),
+      metaRow("Encrypted", doc.isEncrypted ? "Yes" : "No"),
+      metaRow("Title", doc.getTitle()),
+      metaRow("Author", doc.getAuthor()),
+      metaRow("Subject", doc.getSubject()),
+      metaRow("Keywords", (doc.getKeywords() || "")),
+      metaRow("Creator", doc.getCreator()),
+      metaRow("Producer", doc.getProducer()),
+      metaRow("Created", fmtDate(doc.getCreationDate())),
+      metaRow("Modified", fmtDate(doc.getModificationDate())),
+    ].join("");
+    out.innerHTML = `<table class="meta-table">${rows}</table>`;
+    out.style.display = "block";
+    setStatus("infoStatus", "Done.", "ok");
+  }catch(e){ setStatus("infoStatus", "Error: " + e.message, "err"); }
+}
+
+async function doStripMeta(){
+  const file = document.getElementById("stripmetaFile").files[0];
+  if (!file) return setStatus("stripmetaStatus", "Pick a PDF.", "err");
+  try{
+    const bytes = await file.arrayBuffer();
+    const doc = await PDFDocument.load(bytes, { ignoreEncryption: true, updateMetadata: false });
+    const info = doc.getInfoDict();
+    ["Title","Author","Subject","Keywords","Creator","Producer","CreationDate","ModDate"].forEach(k => info.delete(PDFLib.PDFName.of(k)));
+    doc.catalog.delete(PDFLib.PDFName.of("Metadata")); // unlink embedded XMP metadata stream
+    const outBytes = await doc.save({ updateMetadata: false });
+    const blob = new Blob([outBytes], {type: "application/pdf"});
+    const outName = file.name.replace(/\.pdf$/i, "") + "_clean.pdf";
+    downloadBlob(blob, outName);
+    HandyToolx.addFileResult("stripmetaResult", blob, outName);
+    setStatus("stripmetaStatus", "Metadata removed.", "ok");
+  }catch(e){ setStatus("stripmetaStatus", "Error: " + e.message, "err"); }
+}
+
+async function doEncrypt(){
+  const file = document.getElementById("encryptFile").files[0];
+  const userPw = document.getElementById("encryptUserPw").value;
+  if (!file) return setStatus("encryptStatus", "Pick a PDF.", "err");
+  if (!userPw) return setStatus("encryptStatus", "Enter a password to open the PDF.", "err");
+  try{
+    setStatus("encryptStatus", "Encrypting…", "");
+    const bytes = await file.arrayBuffer();
+    const src = await PDFDocument.load(bytes, { ignoreEncryption: true, updateMetadata: false });
+    if (src.isEncrypted) return setStatus("encryptStatus", "This PDF is already password-protected — remove the existing password first.", "err");
+    // Re-load from finalized bytes so every stream is a plain, already-filtered PDFRawStream.
+    const plainBytes = await unbrandedSave(src);
+    const doc = await PDFDocument.load(plainBytes, { updateMetadata: false });
+    const opts = {
+      userPassword: userPw,
+      ownerPassword: document.getElementById("encryptOwnerPw").value,
+      strength: parseInt(document.getElementById("encryptStrength").value, 10),
+      permissions: {
+        print: document.getElementById("permPrint").checked,
+        copy: document.getElementById("permCopy").checked,
+        modify: document.getElementById("permModify").checked,
+        annotate: document.getElementById("permAnnotate").checked,
+      }
+    };
+    const outBytes = await HandyToolxPdfCrypto.encryptDocument(PDFLib, doc, opts);
+    const blob = new Blob([outBytes], {type: "application/pdf"});
+    const outName = file.name.replace(/\.pdf$/i, "") + "_protected.pdf";
+    downloadBlob(blob, outName);
+    HandyToolx.addFileResult("encryptResult", blob, outName);
+    setStatus("encryptStatus", `Encrypted with ${opts.strength}-bit RC4.`, "ok");
+  }catch(e){ setStatus("encryptStatus", "Error: " + e.message, "err"); }
+}
+
+async function doDecrypt(){
+  const file = document.getElementById("decryptFile").files[0];
+  const pw = document.getElementById("decryptPw").value;
+  if (!file) return setStatus("decryptStatus", "Pick a PDF.", "err");
+  try{
+    setStatus("decryptStatus", "Decrypting…", "");
+    const bytes = await file.arrayBuffer();
+    const outBytes = await HandyToolxPdfCrypto.decryptDocument(PDFLib, bytes, pw);
+    const blob = new Blob([outBytes], {type: "application/pdf"});
+    const outName = file.name.replace(/\.pdf$/i, "") + "_unlocked.pdf";
+    downloadBlob(blob, outName);
+    HandyToolx.addFileResult("decryptResult", blob, outName);
+    setStatus("decryptStatus", "Password removed.", "ok");
+  }catch(e){ setStatus("decryptStatus", "Error: " + e.message, "err"); }
+}
+
+
+async function doText(){
+  const file = document.getElementById("textFile").files[0];
+  if (!file) return setStatus("textStatus", "Pick a PDF.", "err");
+  try{
+    const bytes = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
+    let fullText = [];
+    for (let i = 1; i <= pdf.numPages; i++){
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      const pageText = reconstructPageText(content.items);
+      if (pageText.trim()) fullText.push(pageText);
+    }
+    if (fullText.length === 0) {
+      setStatus("textStatus", "No text found. This PDF may be a scanned image (OCR not supported).", "err");
+      return;
+    }
+    const blob = new Blob([fullText.join("\n\n")], {type: "text/plain"});
+    const outName = file.name.replace(/\.pdf$/i, "") + "_text.txt";
+    downloadBlob(blob, outName);
+    HandyToolx.addFileResult("textResult", blob, outName);
+    setStatus("textStatus", `Extracted text from ${pdf.numPages} page(s).`, "ok");
+  }catch(e){ setStatus("textStatus", "Error: " + e.message, "err"); }
+}
+</script>
+</body>
+</html>

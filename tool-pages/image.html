@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Image — Handy Toolx</title>
+    <script src="../assets/js/theme.js"></script>
+    <style>
+        :root{--bg:#F0EAE0;--ink:#1a1a1a;--ink2:#4f4b44;--ink3:#6f6a5f;--rust:#B5392A;--rust-soft:rgba(181,57,42,.08);--paper:#FBF8F2;--mono:'IBM Plex Mono','SF Mono',monospace;--sans:'Archivo',system-ui,sans-serif;--grid:repeating-linear-gradient(0deg,transparent,transparent 47px,rgba(26,26,26,.06)47px,rgba(26,26,26,.06)48px),repeating-linear-gradient(90deg,transparent,transparent 47px,rgba(26,26,26,.06)47px,rgba(26,26,26,.06)48px);--sidebar:200px}
+        @font-face{font-family:Archivo;src:url(../assets/fonts/archivo-variable.woff2)format('woff2');font-weight:400 900;font-display:swap}
+        @font-face{font-family:'IBM Plex Mono';src:url(../assets/fonts/ibm-plex-mono-variable.woff2)format('woff2');font-weight:400 700;font-display:swap}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{background:var(--bg);background-image:var(--grid);font-family:var(--sans);color:var(--ink);padding:1.5rem;min-height:100vh}
+        a{color:var(--rust)}
+        .app{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:var(--sidebar) 1fr;gap:2rem;background:var(--paper);border:2px solid var(--ink);padding:1.5rem;min-height:80vh}
+        .sidebar{border-right:2px solid var(--ink);padding-right:1.5rem;display:flex;flex-direction:column}
+        .sidebar-header{display:flex;flex-direction:column;gap:.2rem;padding-bottom:1rem;border-bottom:2px solid var(--ink);margin-bottom:1rem}
+        .sidebar-brand{font-family:var(--mono);font-weight:600;font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;color:var(--rust)}
+        .sidebar-title{font-weight:800;font-size:1.2rem;letter-spacing:-.025em}
+        .sidebar-back{font-family:var(--mono);font-size:.55rem;text-transform:uppercase;letter-spacing:.18em;color:var(--ink3);margin-top:.2rem}
+        .sidebar-back:hover{color:var(--rust);text-decoration:none}
+        .sidebar-nav{display:flex;flex-direction:column;gap:.1rem;flex:1}
+        .sidebar-nav .tool-btn{font-family:var(--mono);font-size:.65rem;text-align:left;padding:.4rem .7rem;border:none;border-left:3px solid transparent;background:transparent;color:var(--ink2);cursor:pointer;transition:background .15s,border-color .15s;letter-spacing:.02em}
+        .sidebar-nav .tool-btn:hover{background:var(--bg);color:var(--ink)}
+        .sidebar-nav .tool-btn.active{border-left-color:var(--rust);background:var(--rust-soft);color:var(--ink);font-weight:600}
+        .main{display:flex;flex-direction:column;min-width:0}
+        .main-header{padding-bottom:.75rem;border-bottom:2px solid var(--ink);margin-bottom:1.25rem}
+        .main-header h2{font-weight:800;font-size:1.4rem;letter-spacing:-.025em}
+        .main-header .desc{font-family:var(--mono);font-size:.65rem;color:var(--ink3);margin-top:.1rem;letter-spacing:.05em}
+        .tool-panel{display:none;animation:fadeIn .25s cubic-bezier(.16,1,.3,1)}
+        .tool-panel.active{display:block}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+        .tool-panel label{font-family:var(--mono);font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;display:block;margin-top:.9rem;margin-bottom:.2rem;color:var(--ink2)}
+        .tool-panel label:first-of-type{margin-top:0}
+        .tool-panel input[type=file],.tool-panel input[type=text],.tool-panel input[type=number],.tool-panel select,.tool-panel textarea{width:100%;background:var(--paper);border:2px solid var(--ink);padding:.4rem .6rem;font-family:var(--mono);font-size:.7rem;color:var(--ink)}
+        .tool-panel input[type=file]{padding:.4rem;cursor:pointer}
+        .tool-panel input[type=file]::file-selector-button{font-family:var(--mono);font-size:.6rem;padding:.25rem .75rem;border:2px solid var(--ink);background:var(--bg);color:var(--ink);cursor:pointer;margin-right:.75rem;transition:background .15s}
+        .tool-panel input[type=file]::file-selector-button:hover{background:var(--ink);color:var(--paper)}
+        .tool-panel textarea{font-family:var(--mono);font-size:.65rem;resize:vertical}
+        .row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:.4rem}
+        .action{margin-top:1.2rem;font-family:var(--mono);font-weight:600;font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;padding:.45rem 1.2rem;border:2px solid var(--ink);background:var(--rust);color:#fff;cursor:pointer;transition:background .2s}
+        .action:hover{background:var(--ink);color:#fff}
+        .action.secondary{background:var(--paper);color:var(--ink);margin-left:.5rem}
+        .action.secondary:hover{background:var(--bg)}
+        .action.copied{background:#2b6e3b!important;border-color:#2b6e3b!important;color:#fff!important;animation:copyPulse .3s ease}
+        @keyframes copyPulse{0%{transform:scale(1)}40%{transform:scale(1.06)}100%{transform:scale(1)}}
+        .status{font-size:.65rem;font-family:var(--mono);color:var(--ink2);margin-top:.6rem;min-height:1.2rem}
+        .meta-table{width:100%;border-collapse:collapse;margin-top:.75rem;font-family:var(--mono);font-size:.65rem}
+        .meta-table tr{border-bottom:1px solid rgba(128,128,128,.25)}
+        .meta-table td{padding:.35rem .5rem;vertical-align:top}
+        .meta-table td:first-child{color:var(--ink3);white-space:nowrap;width:1%}
+        .meta-table td:last-child{color:var(--ink);overflow-wrap:anywhere}
+        .meta-thumb{max-width:200px;max-height:200px;border:2px solid var(--ink);margin-top:.75rem;display:block}
+        .status.err{color:#b5392a}
+        .status.ok{color:#2b6e3b}
+        .preview{margin-top:1rem;max-width:100%;border:2px solid var(--ink);display:none}
+        .crop-wrap{position:relative;display:inline-block;margin-top:.75rem}
+        .crop-wrap canvas{display:block;border:2px solid var(--ink);max-width:100%}
+        .crop-sel{position:absolute;border:2px dashed var(--rust);background:rgba(181,57,42,.12);pointer-events:none;display:none}
+        textarea.out{width:100%;height:110px;margin-top:.6rem;font-family:var(--mono);font-size:.65rem;border:2px solid var(--ink);background:var(--paper);padding:.4rem .6rem;resize:vertical}
+        @media(max-width:768px){.app{grid-template-columns:1fr;padding:1rem;gap:1rem}.sidebar{border-right:none;border-bottom:2px solid var(--ink);padding-right:0;padding-bottom:.75rem}.sidebar-nav{flex-direction:row;flex-wrap:wrap;gap:.1rem}.sidebar-nav .tool-btn{border-left:none;border-bottom:3px solid transparent;padding:.3rem .5rem;font-size:.6rem}.sidebar-nav .tool-btn.active{border-left:none;border-bottom-color:var(--rust)}body{padding:.75rem}.row{grid-template-columns:1fr}}
+        .sidebar-header-row{display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem}
+        body{transition:background-color .2s,color .2s}
+    </style>
+    <link rel="stylesheet" href="../assets/css/theme.css">
+</head>
+<body>
+<div class="app">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-header-row">
+                <span class="sidebar-brand">Zn4AoZ</span>
+                <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false" title="Switch to dark mode" aria-label="Toggle dark mode">
+                    <svg class="icon icon-moon" viewBox="0 0 16 16" fill="currentColor"><path d="M14 8.6A6.4 6.4 0 0 1 6.9 2 6.6 6.6 0 1 0 14 8.6z"/></svg>
+                    <svg class="icon icon-sun" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="3.3"/><path d="M8 0v2M8 14v2M16 8h-2M2 8H0M13.66 2.34l-1.42 1.42M3.76 12.24l-1.42 1.42M13.66 13.66l-1.42-1.42M3.76 3.76 2.34 2.34" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                </button>
+            </div>
+            <span class="sidebar-title">Image Tools</span>
+            <a class="sidebar-back" href="../index.html">← menu</a>
+        </div>
+        <nav class="sidebar-nav" id="sidebar">
+            <button class="tool-btn active" data-tool="compress">Compress &amp; resize</button>
+            <button class="tool-btn" data-tool="convert">Convert format</button>
+            <button class="tool-btn" data-tool="crop">Crop</button>
+            <button class="tool-btn" data-tool="watermark">Watermark</button>
+            <button class="tool-btn" data-tool="strip">Strip metadata</button>
+            <button class="tool-btn" data-tool="info">Image info</button>
+            <button class="tool-btn" data-tool="base64">Image to Base64</button>
+        </nav>
+    </aside>
+
+    <main class="main">
+        <div class="tool-panel active" id="panel-compress">
+            <div class="main-header"><h2>Compress &amp; resize</h2><div class="desc">Shrink file size and/or dimensions. Re-encodes via canvas. Pick several images to batch-process them all with the same settings.</div></div>
+            <label>Image(s)</label>
+            <input type="file" id="cmpFile" accept="image/*" multiple>
+            <div class="row">
+                <div><label>Max width (px, blank = keep)</label><input type="number" id="cmpWidth" placeholder="e.g. 1600"></div>
+                <div><label>Quality (0.1–1.0, JPEG/WebP only)</label><input type="number" id="cmpQuality" value="0.8" min="0.1" max="1" step="0.05"></div>
+            </div>
+            <label>Output format</label>
+            <select id="cmpFormat">
+                <option value="image/jpeg">JPEG</option>
+                <option value="image/webp">WebP</option>
+                <option value="image/png">PNG</option>
+            </select>
+            <button class="action" onclick="doCompress()">Compress</button>
+            <div class="status" id="cmpStatus"></div>
+            <div class="file-result-list" id="cmpResult"></div>
+        </div>
+
+        <div class="tool-panel" id="panel-convert">
+            <div class="main-header"><h2>Convert format</h2><div class="desc">Switch between PNG, JPEG, and WebP. Pick several images to convert them all at once.</div></div>
+            <label>Image(s)</label>
+            <input type="file" id="cvFile" accept="image/*" multiple>
+            <label>Convert to</label>
+            <select id="cvFormat">
+                <option value="image/png">PNG</option>
+                <option value="image/jpeg">JPEG</option>
+                <option value="image/webp">WebP</option>
+            </select>
+            <button class="action" onclick="doConvert()">Convert</button>
+            <div class="status" id="cvStatus"></div>
+            <div class="file-result-list" id="cvResult"></div>
+        </div>
+
+        <div class="tool-panel" id="panel-crop">
+            <div class="main-header"><h2>Crop</h2><div class="desc">Load an image, drag a rectangle, then crop.</div></div>
+            <label>Image</label>
+            <input type="file" id="cropFile" accept="image/*">
+            <div class="crop-wrap" id="cropWrap" style="display:none;">
+                <canvas id="cropCanvas"></canvas>
+                <div class="crop-sel" id="cropSel"></div>
+            </div>
+            <button class="action" onclick="doCrop()">Crop &amp; download</button>
+            <button class="action secondary" onclick="resetCropSel()">Clear selection</button>
+            <div class="status" id="cropStatus"></div>
+            <div class="file-result-list" id="cropResult"></div>
+        </div>
+
+        <div class="tool-panel" id="panel-watermark">
+            <div class="main-header"><h2>Watermark</h2><div class="desc">Overlay text on an image. Pick several images to stamp them all the same way.</div></div>
+            <label>Image(s)</label>
+            <input type="file" id="wmFile" accept="image/*" multiple>
+            <label>Watermark text</label>
+            <input type="text" id="wmText" placeholder="e.g. DRAFT — do not distribute">
+            <div class="row">
+                <div><label>Position</label>
+                    <select id="wmPos">
+                        <option value="bottom-right">Bottom right</option>
+                        <option value="bottom-left">Bottom left</option>
+                        <option value="top-right">Top right</option>
+                        <option value="top-left">Top left</option>
+                        <option value="center">Center</option>
+                    </select>
+                </div>
+                <div><label>Opacity (0.1–1.0)</label><input type="number" id="wmOpacity" value="0.6" min="0.1" max="1" step="0.05"></div>
+            </div>
+            <button class="action" onclick="doWatermark()">Apply &amp; download</button>
+            <div class="status" id="wmStatus"></div>
+            <div class="file-result-list" id="wmResult"></div>
+        </div>
+
+        <div class="tool-panel" id="panel-strip">
+            <div class="main-header"><h2>Strip metadata</h2><div class="desc">Re-encodes the image to drop EXIF/GPS/camera metadata. Full quality kept. Pick several images to clean them all in one go.</div></div>
+            <label>Image(s)</label>
+            <input type="file" id="stripFile" accept="image/*" multiple>
+            <button class="action" onclick="doStrip()">Strip &amp; download</button>
+            <div class="status" id="stripStatus"></div>
+            <div class="file-result-list" id="stripResult"></div>
+        </div>
+
+        <div class="tool-panel" id="panel-info">
+            <div class="main-header"><h2>Image info</h2><div class="desc">Dimensions, file details, and — for JPEGs — camera/EXIF data if present. Nothing leaves your browser.</div></div>
+            <label>Image</label>
+            <input type="file" id="infoImgFile" accept="image/*">
+            <div class="status" id="infoImgStatus"></div>
+            <div id="infoImgOut" style="display:none;"></div>
+        </div>
+
+        <div class="tool-panel" id="panel-base64">
+            <div class="main-header"><h2>Image to Base64</h2><div class="desc">Get a data URI string you can paste into CSS, HTML, or JSON. Pick several images to convert them all.</div></div>
+            <label>Image(s)</label>
+            <input type="file" id="b64File" accept="image/*" multiple>
+            <button class="action" onclick="doBase64()">Convert</button>
+            <div class="status" id="b64Status"></div>
+            <div id="b64OutList"></div>
+        </div>
+    </main>
+</div>
+
+<script src="../assets/js/jszip.min.js"></script>
+<script src="../assets/js/exif.js"></script>
+<script src="../assets/js/common.js"></script>
+<script src="../assets/js/filepicker.js"></script>
+<script>
+document.getElementById("sidebar").addEventListener("click", e => {
+  const btn = e.target.closest(".tool-btn");
+  if (!btn) return;
+  document.querySelectorAll(".tool-btn").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll(".tool-panel").forEach(p => p.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById("panel-" + btn.dataset.tool).classList.add("active");
+  try { sessionStorage.setItem("handytoolx-image-tab", btn.dataset.tool); } catch (e) {}
+});
+(function restoreTab(){
+  let last; try { last = sessionStorage.getItem("handytoolx-image-tab"); } catch (e) {}
+  if (!last) return;
+  const btn = document.querySelector('.tool-btn[data-tool="' + last + '"]');
+  if (btn) btn.click();
+})();
+
+const setStatus = HandyToolx.setStatus;
+function loadImage(file){
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = URL.createObjectURL(file);
+  });
+}
+function extFor(mime){ return {"image/jpeg":"jpg","image/png":"png","image/webp":"webp"}[mime] || "png"; }
+function toBlob(canvas, format, quality){
+  return new Promise(resolve => canvas.toBlob(resolve, format, quality));
+}
+
+// Runs `process(file)` -> {blob, filename} over every picked file, adds
+// a viewable/copyable result row per output, and if more than one file
+// was processed also offers a single "download all as ZIP" button.
+async function batchRun(picker, statusId, resultId, process, opts){
+  const files = picker.getFiles();
+  if (!files.length) return setStatus(statusId, "Pick at least one image.", "err");
+  const resultEl = document.getElementById(resultId);
+  resultEl.innerHTML = "";
+  let done = 0, zipFiles = [];
+  for (const file of files){
+    try{
+      const { blob, filename } = await process(file);
+      HandyToolx.addFileResult(resultEl, blob, filename, { append: true, isImage: !!opts?.isImage });
+      zipFiles.push({ blob, filename });
+      done++;
+    }catch(e){
+      setStatus(statusId, `Error on "${file.name}": ${e.message}`, "err");
+      return;
+    }
+  }
+  if (zipFiles.length > 1){
+    const zipBtn = document.createElement("button");
+    zipBtn.type = "button";
+    zipBtn.className = "action secondary";
+    zipBtn.style.marginTop = ".5rem";
+    zipBtn.textContent = "Download all as ZIP";
+    zipBtn.addEventListener("click", async () => {
+      const zip = new JSZip();
+      zipFiles.forEach(f => zip.file(f.filename, f.blob));
+      const zipBlob = await zip.generateAsync({ type: "blob" });
+      HandyToolx.downloadBlob(zipBlob, "images.zip");
+    });
+    resultEl.appendChild(zipBtn);
+  }
+  setStatus(statusId, `Processed ${done} of ${files.length} image(s).`, "ok");
+}
+
+const cmpPicker = HandyToolxFilePicker.attach(document.getElementById("cmpFile"));
+async function doCompress(){
+  const maxW = parseInt(document.getElementById("cmpWidth").value, 10);
+  const quality = parseFloat(document.getElementById("cmpQuality").value) || 0.8;
+  const format = document.getElementById("cmpFormat").value;
+  await batchRun(cmpPicker, "cmpStatus", "cmpResult", async file => {
+    const img = await loadImage(file);
+    let w = img.width, h = img.height;
+    if (maxW && w > maxW){ h = Math.round(h * (maxW / w)); w = maxW; }
+    const canvas = document.createElement("canvas");
+    canvas.width = w; canvas.height = h;
+    canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+    const blob = await toBlob(canvas, format, quality);
+    return { blob, filename: file.name.replace(/\.[^.]+$/, "") + "_compressed." + extFor(format) };
+  }, { isImage: true });
+}
+
+const cvPicker = HandyToolxFilePicker.attach(document.getElementById("cvFile"));
+async function doConvert(){
+  const format = document.getElementById("cvFormat").value;
+  await batchRun(cvPicker, "cvStatus", "cvResult", async file => {
+    const img = await loadImage(file);
+    const canvas = document.createElement("canvas");
+    canvas.width = img.width; canvas.height = img.height;
+    const ctx = canvas.getContext("2d");
+    if (format === "image/jpeg"){ ctx.fillStyle = "#fff"; ctx.fillRect(0,0,canvas.width,canvas.height); }
+    ctx.drawImage(img, 0, 0);
+    const blob = await toBlob(canvas, format, 0.92);
+    return { blob, filename: file.name.replace(/\.[^.]+$/, "") + "." + extFor(format) };
+  }, { isImage: true });
+}
+
+let cropImg = null, cropScale = 1, cropRect = null, cropFileName = "image";
+document.getElementById("cropFile").addEventListener("change", async e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  cropFileName = file.name.replace(/\.[^.]+$/, "");
+  cropImg = await loadImage(file);
+  const wrap = document.getElementById("cropWrap");
+  const canvas = document.getElementById("cropCanvas");
+  const maxDisplay = 640;
+  cropScale = cropImg.width > maxDisplay ? maxDisplay / cropImg.width : 1;
+  canvas.width = cropImg.width * cropScale;
+  canvas.height = cropImg.height * cropScale;
+  canvas.getContext("2d").drawImage(cropImg, 0, 0, canvas.width, canvas.height);
+  wrap.style.display = "inline-block";
+  resetCropSel();
+});
+function resetCropSel(){
+  cropRect = null;
+  document.getElementById("cropSel").style.display = "none";
+  setStatus("cropStatus", "", "");
+}
+(function initCropDrag(){
+  const canvas = document.getElementById("cropCanvas");
+  const sel = document.getElementById("cropSel");
+  let dragging = false, startX = 0, startY = 0;
+  canvas.addEventListener("mousedown", e => {
+    const r = canvas.getBoundingClientRect();
+    startX = e.clientX - r.left; startY = e.clientY - r.top;
+    dragging = true; sel.style.display = "block";
+  });
+  canvas.addEventListener("mousemove", e => {
+    if (!dragging) return;
+    const r = canvas.getBoundingClientRect();
+    const x = e.clientX - r.left, y = e.clientY - r.top;
+    const left = Math.min(startX, x), top = Math.min(startY, y);
+    const w = Math.abs(x - startX), h = Math.abs(y - startY);
+    sel.style.left = left + "px"; sel.style.top = top + "px";
+    sel.style.width = w + "px"; sel.style.height = h + "px";
+    cropRect = { x: left / cropScale, y: top / cropScale, w: w / cropScale, h: h / cropScale };
+  });
+  window.addEventListener("mouseup", () => { dragging = false; });
+})();
+async function doCrop(){
+  if (!cropImg) return setStatus("cropStatus", "Pick an image.", "err");
+  if (!cropRect || cropRect.w < 2 || cropRect.h < 2) return setStatus("cropStatus", "Drag a selection on the image first.", "err");
+  const w = Math.round(cropRect.w);
+  const h = Math.round(cropRect.h);
+  const canvas = document.createElement("canvas");
+  canvas.width = w; canvas.height = h;
+  canvas.getContext("2d").drawImage(cropImg, cropRect.x, cropRect.y, cropRect.w, cropRect.h, 0, 0, w, h);
+  const blob = await toBlob(canvas, "image/png");
+  const filename = cropFileName + "_cropped.png";
+  HandyToolx.downloadBlob(blob, filename);
+  const resultEl = document.getElementById("cropResult");
+  resultEl.innerHTML = "";
+  HandyToolx.addFileResult(resultEl, blob, filename, { append: true, isImage: true });
+  setStatus("cropStatus", `Cropped to ${w}×${h}px.`, "ok");
+}
+
+const wmPicker = HandyToolxFilePicker.attach(document.getElementById("wmFile"));
+async function doWatermark(){
+  const text = document.getElementById("wmText").value;
+  if (!text) return setStatus("wmStatus", "Enter watermark text.", "err");
+  await batchRun(wmPicker, "wmStatus", "wmResult", async file => {
+    const img = await loadImage(file);
+    const canvas = document.createElement("canvas");
+    canvas.width = img.width; canvas.height = img.height;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+    const fontSize = Math.max(16, Math.round(img.width / 22));
+    ctx.font = `600 ${fontSize}px Inter, sans-serif`;
+    ctx.globalAlpha = parseFloat(document.getElementById("wmOpacity").value) || 0.6;
+    ctx.fillStyle = "#ffffff";
+    ctx.strokeStyle = "rgba(0,0,0,0.5)"; ctx.lineWidth = fontSize / 12;
+    const metrics = ctx.measureText(text);
+    const pad = fontSize;
+    let x, y;
+    const pos = document.getElementById("wmPos").value;
+    if (pos.includes("right")) x = canvas.width - metrics.width - pad; else if (pos === "center") x = (canvas.width - metrics.width) / 2; else x = pad;
+    if (pos.includes("bottom")) y = canvas.height - pad; else if (pos === "center") y = canvas.height / 2; else y = pad + fontSize;
+    ctx.strokeText(text, x, y);
+    ctx.fillText(text, x, y);
+    const blob = await toBlob(canvas, "image/png");
+    return { blob, filename: file.name.replace(/\.[^.]+$/, "") + "_watermarked.png" };
+  }, { isImage: true });
+}
+
+const stripPicker = HandyToolxFilePicker.attach(document.getElementById("stripFile"));
+async function doStrip(){
+  await batchRun(stripPicker, "stripStatus", "stripResult", async file => {
+    const img = await loadImage(file);
+    const canvas = document.createElement("canvas");
+    canvas.width = img.width; canvas.height = img.height;
+    canvas.getContext("2d").drawImage(img, 0, 0);
+    const format = file.type === "image/png" ? "image/png" : "image/jpeg";
+    const blob = await toBlob(canvas, format, 0.95);
+    return { blob, filename: file.name.replace(/\.[^.]+$/, "") + "_clean." + extFor(format) };
+  }, { isImage: true });
+}
+
+const b64Picker = HandyToolxFilePicker.attach(document.getElementById("b64File"));
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function metaRow(label, value){
+  return `<tr><td>${escapeHtml(label)}</td><td>${value === null || value === undefined || value === "" ? "<em>—</em>" : escapeHtml(value)}</td></tr>`;
+}
+const EXIF_LABELS = {
+  Make: "Camera make", Model: "Camera model", Orientation: "Orientation",
+  DateTime: "File date", DateTimeOriginal: "Captured", ExposureTime: "Exposure time",
+  FNumber: "Aperture (f/)", ISOSpeedRatings: "ISO", FocalLength: "Focal length (mm)",
+  GPSLatitude: "GPS latitude", GPSLongitude: "GPS longitude"
+};
+document.getElementById("infoImgFile").addEventListener("change", async e => {
+  const file = e.target.files[0];
+  const out = document.getElementById("infoImgOut");
+  if (!file) return;
+  setStatus("infoImgStatus", "Reading…", "");
+  out.style.display = "none";
+  try{
+    const img = await loadImage(file);
+    let rows = [
+      metaRow("Filename", file.name),
+      metaRow("File size", HandyToolx.fmtSize(file.size)),
+      metaRow("Type", file.type || "unknown"),
+      metaRow("Dimensions", `${img.width} × ${img.height}px`),
+      metaRow("Aspect ratio", (img.width / img.height).toFixed(3) + " : 1"),
+      metaRow("Last modified", file.lastModified ? new Date(file.lastModified).toLocaleString() : null),
+    ].join("");
+    let exifHtml = "";
+    if (/jpeg|jpg/i.test(file.type)){
+      const buf = new Uint8Array(await file.arrayBuffer());
+      const exif = HandyToolxExif.parseExif(buf);
+      if (exif){
+        const exifRows = Object.keys(EXIF_LABELS)
+          .filter(k => exif[k] !== undefined)
+          .map(k => {
+            let v = exif[k];
+            if (k === "GPSLatitude" || k === "GPSLongitude") v = v.toFixed(6) + "°";
+            if (k === "ExposureTime") v = (v < 1 ? "1/" + Math.round(1/v) : v) + " s";
+            return metaRow(EXIF_LABELS[k], v);
+          }).join("");
+        exifHtml = `<h3 style="margin-top:1rem;font-size:.7rem;letter-spacing:.05em;text-transform:uppercase;color:var(--ink2);">EXIF</h3><table class="meta-table">${exifRows}</table>`;
+      } else {
+        exifHtml = `<p class="status" style="margin-top:.75rem;">No EXIF data found in this file.</p>`;
+      }
+    }
+    out.innerHTML = `<img class="meta-thumb" src="${URL.createObjectURL(file)}" alt=""><table class="meta-table">${rows}</table>${exifHtml}`;
+    out.style.display = "block";
+    setStatus("infoImgStatus", "Done.", "ok");
+  }catch(e){ setStatus("infoImgStatus", "Error: " + e.message, "err"); }
+});
+
+async function doBase64(){
+  const files = b64Picker.getFiles();
+  if (!files.length) return setStatus("b64Status", "Pick at least one image.", "err");
+  const list = document.getElementById("b64OutList");
+  list.innerHTML = "";
+  let totalKb = 0;
+  for (const file of files){
+    const dataUrl = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+    totalKb += file.size / 1024;
+    const block = document.createElement("div");
+    block.style.marginTop = ".75rem";
+    const label = document.createElement("label");
+    label.textContent = file.name + ` (${(file.size/1024).toFixed(0)}KB)`;
+    label.style.marginTop = "0";
+    const textarea = document.createElement("textarea");
+    textarea.className = "out"; textarea.readOnly = true; textarea.value = dataUrl;
+    textarea.style.height = "90px";
+    const copyBtn = document.createElement("button");
+    copyBtn.type = "button"; copyBtn.className = "action secondary"; copyBtn.style.marginTop = ".4rem";
+    copyBtn.textContent = "Copy";
+    copyBtn.addEventListener("click", () => HandyToolx.copyText(dataUrl, copyBtn));
+    block.appendChild(label); block.appendChild(textarea); block.appendChild(copyBtn);
+    list.appendChild(block);
+  }
+  setStatus("b64Status", `${totalKb.toFixed(0)}KB encoded across ${files.length} file(s).`, "ok");
+}
+</script>
+</body>
+</html>
