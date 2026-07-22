@@ -63,14 +63,48 @@ const HandyToolx = {
     return (bytes / 1048576).toFixed(1) + ' MB';
   },
 
-  // ----- Add file result to a list -----
-  addFileResult(fileName, info) {
-    const list = document.getElementById('results-list') || document.querySelector('.results-list');
-    if (!list) return;
+  // ----- Enhanced file result (supports image previews + append) -----
+  addFileResult(containerOrId, blobOrFilename, filenameOrOpts, opts) {
+    let container, blob, filename;
+    if (typeof containerOrId === 'string') {
+      container = document.getElementById(containerOrId);
+      blob = blobOrFilename;
+      filename = filenameOrOpts;
+    } else {
+      container = containerOrId;
+      blob = blobOrFilename;
+      filename = filenameOrOpts;
+      opts = filenameOrOpts; // shift for old calls
+    }
+    if (!container || !blob) return;
+
+    opts = opts || {};
     const item = document.createElement('div');
     item.className = 'result-item';
-    item.textContent = `${fileName} — ${info}`;
-    list.appendChild(item);
+    item.style.marginBottom = '0.75rem';
+
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename || 'download';
+    link.textContent = filename || 'file';
+    link.style.color = 'var(--rust)';
+    item.appendChild(link);
+
+    if (opts.isImage) {
+      const thumb = document.createElement('img');
+      thumb.src = URL.createObjectURL(blob);
+      thumb.style.maxWidth = '180px';
+      thumb.style.maxHeight = '120px';
+      thumb.style.border = '1px solid var(--ink)';
+      thumb.style.marginTop = '0.4rem';
+      thumb.style.display = 'block';
+      item.appendChild(thumb);
+    }
+
+    if (opts.append !== true) {
+      container.innerHTML = '';
+    }
+    container.appendChild(item);
   },
 
   // ----- Download blob as file -----
