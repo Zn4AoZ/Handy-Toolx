@@ -34,11 +34,25 @@ const HandyToolx = {
   },
 
   // ----- Status messages -----
-  setStatus(msg, isError = false) {
-    const el = document.getElementById('status') || document.querySelector('.status');
+  // Supports both legacy PDF tools (id, msg, type) and simple (msg, isError)
+  setStatus(idOrMsg, msgOrIsError, type) {
+    let el, msg, isError;
+    if (typeof idOrMsg === 'string' && document.getElementById(idOrMsg)) {
+      // PDF-style: setStatus("mergeStatus", "message", "err")
+      el = document.getElementById(idOrMsg);
+      msg = msgOrIsError;
+      isError = type === 'err';
+    } else {
+      // Simple style: setStatus("message", true)
+      el = document.getElementById('status') || document.querySelector('.status');
+      msg = idOrMsg;
+      isError = msgOrIsError === true || msgOrIsError === 'err';
+    }
     if (el) {
       el.textContent = msg;
       el.style.color = isError ? '#B5392A' : '#1a1a1a';
+      if (isError) el.classList.add('err'); else el.classList.remove('err');
+      if (!isError && el.classList.contains('status')) el.classList.add('ok');
     }
   },
 
